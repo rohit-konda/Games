@@ -3,7 +3,7 @@
 Basic library of game class definitions and relevant algorithms
 """
 
-from games import *
+from Games.basic_games import *
 
 
 class ResourceGame(SocialGame):

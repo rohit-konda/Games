@@ -69,6 +69,8 @@ class Game():
         self.mnes = None  # list of mixed nash equilibria (index of strategy for each player)
         self.st_dict = None  # dictionary of {(tuple of player labels): (tuple of player strategies)}
 
+        self.check_game()  # function for enforcing correct construction of a game definition
+
     def set_payoffs(self):
         """ set payoff matrices """
         pass
@@ -106,6 +108,10 @@ class Game():
         for k, v in zip(labels, st_product):
             st_dict.update({k: v})
         self.st_dict = st_dict
+
+    def check_game(self):
+        """ function for enforcing correct construction of a game definition """
+        pass
 
 
 class FromPayoffGame(Game):

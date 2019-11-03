@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Basic library of game class definitions and relevant algorithms
+Basic library of game class definitions and relevant helper functions
 """
 
 import numpy as np
@@ -12,10 +12,6 @@ solvers.options['show_progress'] = False
 #  Algorithms  #
 
 
-def factorial(n):
-    """ returns n factoral"""
-    return n * factorial(n-1) if n > 1 else 1
-
 def powerset(iterable):
     """ returns the powerset of an iterable object (as a list of tuples)"""
     s = list(iterable)
@@ -26,11 +22,8 @@ def flatten(iterable):
     return [i for sublist in iterable for i in sublist]
 
 def to_dictstrat(players, strategies):
-    """ return a dictionary of stratefies for each player from a list of strategies """
-    strat = {}
-    for k, v in zip(players, strategies):
-        strat.update({k: v})
-    return strat
+    """ return a dictionary of strategies for each player from a list of strategies """
+    return {k: v for (k, v) in zip(players, strategies)}
 
 def dict_nlist(dic):
     """ create a nested list from a dictionary of indices and values """
@@ -41,18 +34,15 @@ def dict_nlist(dic):
     return nestedlist
 
 def create_nlist(dim):
-    """ recursively create a nested list according to dimensions dim """
+    """ recursively create a nested list according to a list of dimensions dim """
     return [create_nlist(dim[1:]) if len(dim) > 1 else None for _ in range(dim[0])]
 
-def nlist_set(nlist, ind, val, give=False):
-    """ set or get a specific index ind from a nested list """
+def set_nlist(nlist, ind, val):
+    """ set a specific list of indexes ind from a nested list """
     sublist = nlist
     for i in ind[:-1]:
         sublist = sublist[i]
-    if give:
-        return sublist[ind[-1]]
-    else:
-        sublist[ind[-1]] = val
+    sublist[ind[-1]] = val
 
 
 #  Game Frameworks  #
@@ -129,88 +119,3 @@ class FromIndexGame(Game):
         players = [i for i in range(n)]  # player labels: 1 ... n
         strategies = {pl: [i for i in range(st)] for (pl, st) in zip(players, n_strat)}  # strategy labels: 1 ... m_i
         Game.__init__(self, None, players, strategies)
-
-
-class NetworkGame(Game):
-    """ framework for games that are based on a network"""
-    def __init__(self, payoffs, players, strategies, network):
-        Game.__init__(self, payoffs, players, strategies)
-        self.network = network  # directed network of the game (dictionary of {node: to other nodes})
-
-
-class ZeroSumGame(FromPayoffGame):
-    """ zero sum game wituh two players"""
-    def __init__(self, payoff):
-        payoffs = [-payoff, payoff]  # 1st player minimizes, 2nd player maximizes
-        FromPayoffGame.__init__(self, payoffs)
-        self.psec = None  # define pure security policies dictionaries (V_underbar, p1_index), (V_overbar, p2_index)
-        self.msec = None  # define mixed security policies dictionary (V_m, p1_policy, p2_policy)
-
-    def set_sec(self):
-        """ set pure security values and policies """
-        max_first = np.max(self.payoffs[0], 1)
-        V_underbar = np.min(max_first)
-        p1_policy = np.nonzero(max_first == V_underbar)[0].tolist()
-        min_first = np.min(self.payoffs[0], 0)
-        V_overbar = np.max(min_first)
-        p2_policy = np.nonzero(min_first == V_overbar)[0].tolist()
-        self.sec = [(V_underbar, p1_policy), (V_overbar, p2_policy)]
-
-    def set_msec(self):
-        """ set mixed security values and policies """
-        n = len(self.strategies[0])
-        m = len(self.strategies[1])
-        O_n = np.ones((n, 1))
-        O_m = np.ones((m, 1))
-        Z_n = np.zeros((n, 1))
-        Z_m = np.zeros((m, 1))
-        I_n = np.identity(n)
-        I_m = np.identity(m)
-        P = self.payoffs[1]
-
-        c_n = matrix(np.hstack((np.array([1]), np.zeros((n,)))))
-        G_n = matrix(np.vstack((np.hstack((-O_m, P.T)), np.hstack((Z_n, -I_n)))))
-        h_n = matrix(np.vstack((Z_m, Z_n)))
-        A_n = matrix(np.hstack((np.array([[0]]), O_n.T)))
-        b_n = matrix(np.array([1.]))
-        sol_n = solvers.lp(c_n, G_n, h_n, A_n, b_n)
-
-        c_m = matrix(np.hstack((np.array([-1]), np.zeros((m,)))))
-        G_m = matrix(np.vstack((np.hstack((O_n, -P)), np.hstack((Z_m, -I_m)))))
-        h_m = matrix(np.vstack((Z_n, Z_m)))
-        A_m = matrix(np.hstack((np.array([[0]]), O_m.T)))
-        b_m = matrix(np.array([1.]))
-        sol_m = solvers.lp(c_m, G_m, h_m, A_m, b_m)
-
-        self.msec = (sol_n['x'][0], sol_n['x'][1:], sol_m['x'][1:])
-
-
-class SocialGame(Game):
-    """ game with a social utility function"""
-    def __init__(self, payoffs, players, strategies):
-        Game.__init__(self, payoffs, players, strategies)
-        self.s_payoff = None  # social payoff for each set of strategies
-        self.so = None  # optimal social payoff
-        self.posa = None  # (Price of Anarchy, Stability)
-
-    def set_s_payoff(self):
-        """ set social payoff matrix"""
-        pass
-
-    def set_so(self):
-        """ get strategies for the optimal social payoff"""
-        self.set_dependency(['s_payoff'])
-        self.so = np.amax(self.s_payoff)
-
-    def set_posa(self):
-        """ set price of anarchy and stability """
-        self.set_dependency(['pnes', 'so'])
-        pne_values = np.array([self.s_payoff[pne] for pne in self.pnes])
-        price_ratios = list(pne_values/self.so)
-        self.posa = (min(price_ratios), max(price_ratios))  # poa, pos
-
-
-class PotentialGame(SocialGame):
-    """ framework for a potential game"""
-    def __init__(self, payoffs, players, strategies):
-        SocialGame.__init__(self, payoffs, players, strategies)

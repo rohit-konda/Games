@@ -4,7 +4,6 @@ Library for welfare resource games
 """
 
 from Games.basic_games import *
-from scipy import linprog
 
 
 class ResourceGame(SocialGame):

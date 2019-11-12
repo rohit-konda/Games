@@ -3,7 +3,7 @@
 Zero Sum Game class definitions 
 """
 
-from Games.basic_games import *
+from Games.basic import *
 
 class ZeroSumGame(FromPayoffGame):
     """ zero sum game wituh two players"""

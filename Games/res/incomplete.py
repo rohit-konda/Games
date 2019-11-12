@@ -3,7 +3,7 @@
 Library for welfare games that depend on information constraints
 """
 
-from Games.basic_games import *
+from Games.basic import *
 
 class InfoResourceGame(ResourceGame, NetworkGame):
     """ Resource game with incomplete information of other agent strategies """

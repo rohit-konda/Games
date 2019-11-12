@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(name='Games',
       version='1.0',
@@ -7,7 +7,7 @@ setup(name='Games',
       author='-',
       author_email='-',
       license='None',
-      packages=['Games'],
+      packages=find_packages(),
       install_requires=[
           'numpy', 'cvxopt', 'scipy', 'matplotlib'],
       classifiers=[

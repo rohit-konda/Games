@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Zero Sum Game class definitions 
+Social games class definitions 
 """
 
-from Games.basic_games import *
+from Games.basic import *
 
 
 class SocialGame(Game):

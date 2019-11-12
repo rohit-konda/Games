@@ -3,7 +3,7 @@
 Library for welfare resource games
 """
 
-from Games.basic_games import *
+from Games.social import *
 
 
 class ResourceGame(SocialGame):
@@ -73,7 +73,7 @@ class SetCoverGame(ResourceGame):
             W_r[i, :] = self.resources[i]*np.array(self.w)
         self.W_r = W_r
 
-    def f_r(self, num, r=None):
+    def f_r(self, num, r):
         """ function design for the utility function depends on what resource,
         and what players are covering it"""
-        return self.f[num]
+        return self.w[r] * self.f[num]

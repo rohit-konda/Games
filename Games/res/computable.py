@@ -5,7 +5,7 @@ R Chandan, D Paccagnan, JR Marden (2019) Optimal mechanisms for distributed reso
 """
 
 from Games.basic import *
-from Games.res.resource import SetCoverGame
+from Games.res.resource import DistResGame
 from cvxopt.solvers import lp
 #from scipy.optimize import linprog
 
@@ -33,15 +33,15 @@ def I_r(n):
     return [j for j in list(set(ind)) if j != (0, 0, 0)]
 
 
-class CompResourceGame(SetCoverGame):
+class CompResourceGame(DistResGame):
     """ framework for resource games with computable price of anarchy """
-    def __init__(self, players, strategies, resources, w, f, solver='cvxopt'):
-        SetCoverGame.__init__(self, players, strategies, resources, w, f)
+    def __init__(self, players, strategies, values, w, f, solver='cvxopt'):
+        DistResGame.__init__(self, players, strategies, values, w, f)
         self.I = I(self.n)
         self.I_r = I_r(self.n)
 
     def PoAfunction(self):
-        """returns optimal function for the best Price of Anarchy """
+        """ returns optimal function for the best Price of Anarchy """
     
         num = len(self.I_r)
         G = np.zeros((num+1, self.n+1))

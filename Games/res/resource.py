@@ -9,36 +9,35 @@ from Games.social import *
 class ResourceGame(SocialGame):
     """ framework for a resource game """
     def __init__(self, players, strategies, r_m):
-        # strategies should be in the powerset of resources 2^R_m
+        # strategies should be in the powerset of resources 2^r_m
         SocialGame.__init__(self, None, players, strategies)
         self.r_m = r_m  # number of resources
-        self.W_r = None  # local welfare function: array of (r_m x n)
 
-    def set_W_r(self):
-        """ set local welfare function, return a (r_m x n) array """
+    def w_r(self, res, players):
+        """ welfare function, returns a scalar value dependent on the resource and which players select it"""
         pass
 
-    def res_dist(self, strategies):
-        """ return distribution of resources from list of player strategies """
-        return [np.sum(np.array(flatten(strategies)) == i) for i in range(self.r_m)]
+    def player_cover(self, strategies):
+        """ returns list of which players are covering the resource """
+        return [[j for j in range(self.n) if i in strategies[j]] for i in range(self.r_m)]
 
     def set_s_payoff(self):
         """ set social payoff matrix"""
-        self.set_dependency(['st_dict', 'W_r'])
+        self.set_dependency(['st_dict'])
         sp_dict = {}
         for k, v in self.st_dict.items():
-            res_d = self.res_dist(v)
-            value = sum([self.W_r[i, res_d[i]] for i in range(len(res_d))])
+            p_cover = self.player_cover(v)
+            value = sum([self.w_r(i, p_cover[i]) for i in range(self.r_m)])
             sp_dict.update({k: value})
         self.s_payoff = np.array(dict_nlist(sp_dict))
 
-    def U_i(self, i, strategies):
+    def U_i(self, i, strategy):
         """ utility for the strategy for player i"""
-        p_i = list(strategies[i])
-        res_d = self.res_dist(strategies)
-        return sum([self.f_r(res_d[j], j) for j in p_i])
+        strategy_i = list(strategy[i])
+        p_cover = self.player_cover(strategy)
+        return sum([self.f_r(i, j, p_cover[j]) for j in strategy_i])
 
-    def f_r(self, num, r):
+    def f_r(self, i, res, players):
         """ function design for the utility function depends on what resource,
         and what players are covering it"""
         pass
@@ -51,29 +50,39 @@ class ResourceGame(SocialGame):
             s_dict_i = {}
             for k, v in self.st_dict.items():
                 s_dict_i.update({k: self.U_i(i, v)})
-                return
             payoff_i = np.array(dict_nlist(s_dict_i))
             payoffs[i] = payoff_i
         self.payoffs = payoffs
 
 
-class SetCoverGame(ResourceGame):
-    """ game where utility is gained for covering an array of resources """
-    def __init__(self, players, strategies, resources, w, f):
-        ResourceGame.__init__(self, players, strategies, len(resources))
-        self.resources = resources  # values (v_r) associated with each resource 
-        self.w = w  # w(j) welfare basis function ((self.n+1,) np.array)
-        self.f = f  # f(j) design function for the utility ((self.n+1,) np.array)
+class CongestionGame(ResourceGame):
+    """ framework for a congestion game """
+    def __init__(self, players, strategies, Wr, Fr):
+        # strategies should be in the powerset of resources 2^r_m
+        ResourceGame.__init__(self, players, strategies, len(Wr))
+        self.Wr = Wr  # r_m x n+1 array to denote welfare associated with the number of players selecting a resource
+        self.Fr = Fr  # r_m x n+1 array to denote utility associated with the number of players selecting a resource
 
-    def set_W_r(self):
-        """ set local welfare function, return a (r_m x n) array
-        W_r(j) = v_r * w(j) """
-        W_r = np.zeros((self.r_m, self.n+1))
-        for i in range(self.r_m):
-            W_r[i, :] = self.resources[i]*np.array(self.w)
-        self.W_r = W_r
+    def w_r(self, res, players):
+        """ welfare function, returns a scalar value dependent on the resource,
+         and how many players select it"""
+        return self.Wr[res, len(players)]
 
-    def f_r(self, num, r):
+    def f_r(self, i, res, players):
         """ function design for the utility function depends on what resource,
         and what players are covering it"""
-        return self.w[r] * self.f[num]
+        return self.Fr[res, len(players)]
+
+
+class DistrResGame(CongestionGame):
+    """ distributed resource allocation game where utility is gained for covering an array of resources """
+    def __init__(self, players, strategies, values, w, f):
+        Wr = np.dot(np.diag(values), np.array([w] * len(values)))  # Wr(j) = v_r * w(j)
+        Fr = np.dot(np.diag(values), np.array([f] * len(values)))  # Fr(j) = v_r * f(j)
+        CongestionGame.__init__(self, players, strategies, Wr, Fr)
+        self.values = values  # values (v_r) associated with each resource
+        self.w = w  # w(j) welfare basis function ((n+1,) np.array)
+        self.f = f  # f(j) design function for the utility ((n+1,) np.array)
+
+
+

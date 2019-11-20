@@ -6,7 +6,7 @@ Basic library of game class definitions and relevant helper functions
 import numpy as np
 from itertools import chain, combinations, product
 from cvxopt import matrix, solvers
-solvers.options['show_progress'] = False
+solvers.options['show_progress'] = False  # remove print output of cvxopt
 
 
 #  Algorithms  #
@@ -30,24 +30,23 @@ def to_dictstrat(players, strategies):
 
 def dict_nlist(dic):
     """ create a nested list from a dictionary of indices and values """
+
+    def create_nlist(dim):
+        """ recursively create a nested list according to a list of dimensions dim """
+        return [create_nlist(dim[1:]) if len(dim) > 1 else None for _ in range(dim[0])]
+
+    def nlist_set(nlist, ind, val):
+        """ set a specific list of indexes ind from a nested list """
+        sublist = nlist
+        for i in ind[:-1]:
+            sublist = sublist[i]
+        sublist[ind[-1]] = val
+
     lengths = [max(pos)+1 for pos in map(list, zip(*dic.keys()))]
     nestedlist = create_nlist(lengths)
     for k, v in dic.items():
         nlist_set(nestedlist, k, v)
     return nestedlist
-
-
-def create_nlist(dim):
-    """ recursively create a nested list according to a list of dimensions dim """
-    return [create_nlist(dim[1:]) if len(dim) > 1 else None for _ in range(dim[0])]
-
-
-def set_nlist(nlist, ind, val):
-    """ set a specific list of indexes ind from a nested list """
-    sublist = nlist
-    for i in ind[:-1]:
-        sublist = sublist[i]
-    sublist[ind[-1]] = val
 
 
 #  Game Frameworks  #
@@ -56,7 +55,7 @@ def set_nlist(nlist, ind, val):
 class Game:
     """ basic game class """
     def __init__(self, payoffs, players, strategies):
-        self.players = players  # list of player labels
+        self.players = players  # list of player labels (use the same ordering for indexing as in this list)
         self.n = len(players)  # number of players
         self.strategies = strategies  # dictionary of (player: list of possible strategies)
         self.payoffs = payoffs  # list of n payoff numpy arrays (A_1 x A_2 X ...)
@@ -64,7 +63,9 @@ class Game:
         self.mnes = None  # list of mixed nash equilibria (index of strategy for each player)
         self.st_dict = None  # dictionary of {(tuple of player labels): (tuple of player strategies)}
 
-        self.check_game()  # function for enforcing correct construction of a game definition
+    def U_i(self, i, strategy):
+        """ utility for the strategy for player i"""
+        pass
 
     def set_payoffs(self):
         """ set payoff matrices """

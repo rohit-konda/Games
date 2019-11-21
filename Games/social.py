@@ -11,7 +11,7 @@ class SocialGame(Game):
     def __init__(self, payoffs, players, strategies):
         Game.__init__(self, payoffs, players, strategies)
         self.s_payoff = None  # social payoff for each set of strategies
-        self.so = None  # optimal social payoff
+        self.so = None  # one instance of a strategy for the optimal social payoff
         self.posa = None  # (Price of Anarchy, Stability)
 
     def set_s_payoff(self):
@@ -21,13 +21,13 @@ class SocialGame(Game):
     def set_so(self):
         """ get strategies for the optimal social payoff"""
         self.set_dependency(['s_payoff'])
-        self.so = np.amax(self.s_payoff)
+        self.so = np.unravel_index(np.argmax(self.s_payoff), self.s_payoff.shape)
 
     def set_posa(self):
         """ set price of anarchy and stability """
         self.set_dependency(['pnes', 'so'])
-        pne_values = np.array([self.s_payoff[pne] for pne in self.pnes])
-        price_ratios = list(pne_values/self.so)
+        pne_values = np.array([self.s_payoff[pne] for pne in self.pnes], dtype='float')
+        price_ratios = list(pne_values/self.s_payoff[self.so])
         self.posa = (min(price_ratios), max(price_ratios))  # poa, pos
 
 

@@ -74,7 +74,7 @@ class CongestionGame(ResourceGame):
         return self.Fr[res, len(players)]
 
 
-class DistrResGame(CongestionGame):
+class DistResGame(CongestionGame):
     """ distributed resource allocation game where utility is gained for covering an array of resources """
     def __init__(self, players, strategies, values, w, f):
         Wr = np.dot(np.diag(values), np.array([w] * len(values)))  # Wr(j) = v_r * w(j)

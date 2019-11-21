@@ -3,34 +3,26 @@
 Library for welfare games that depend on information constraints
 """
 
-from Game.res.resource import *
+from Games.res.resource import DistResGame
+from Games.basic import Game
+from math import factorial
+from numpy import exp
 
-class InfoResourceGame(ResourceGame, NetworkGame):
+
+class InfoGame(ResourceGame):
     """ Resource game with incomplete information of other agent strategies """
-    def __init__(self, payoffs, players, strategies, r_m, network):
-        ResourceGame.__init__(self, payoffs, players, strategies, r_m)
-        NetworkGame.__init__(self, payoffs, players, strategies, network)
+    def __init__(self, players, strategies, r_m, infograph):
+        ResourceGame.__init__(self, players, strategies, r_m)
+        self.infograph = infograph  # list of [list of index of players] that a player can sense which action
 
-    def U_i(self, i, strategies):
-        """ utility for the strategies for player i"""
-        info = self.network[self.players[i]]
-        p_i = list(strategies[i])
-        known_st = [strategies[self.players.index(pl)] for pl in info]
-        known_st_rel = [j if j in set(known_st) else None for j in strategies]
-        mod_pi = self.evaluator(i, known_st_rel)
-        res_d = self.res_dist(mod_pi)
-        return sum([self.f_r(res_d[j], j) for j in p_i])
+    def evaluator(self, i, strategy):
+        """ utility for the strategies for player with index i"""
+        info = self.infograph[i]
+        mod_str = [strategy[p] if j in info else () for j in range(self.n)]  # put modified stategy here
+        return mod_str
 
-    def evaluator(self, i, mod_strategy):
-        """ A valid evaluator functions that returns a possible total strategy """
-        pass
+    def U_i(self, i, strategy):
+        """ utility for the strategy for player i"""
+        mod_strategy = self.evaluator(i, strategy)
+        return ResourceGame.U_i(i, mod_strategy)
 
-class MaxInfoSetCoverGame(InfoResourceGame, SetCoverGame):
-    """ """
-    def __init__(self, payoffs, players, strategies, resources, w, f, network):
-        InfoResourceGame.__init__(self, payoffs, players, strategies, len(resources), network)
-        SetCoverGame.__init__(self, payoffs, players, strategies, resources, w, f)
-
-    def evaluator(self, i, mod_strategy):
-        """ A valid evaluator functions that returns a possible total strategy """
-        return [() if j is None else j for j in mod_strategy]

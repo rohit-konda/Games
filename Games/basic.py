@@ -23,11 +23,6 @@ def flatten(iterable):
     return [i for sublist in iterable for i in sublist]
 
 
-def to_dictstrat(players, strategies):
-    """ return a dictionary of strategies for each player from a list of strategies """
-    return {k: v for (k, v) in zip(players, strategies)}
-
-
 def dict_nlist(dic):
     """ create a nested list from a dictionary of indices and values """
 
@@ -57,7 +52,7 @@ class Game:
     def __init__(self, payoffs, players, strategies):
         self.players = players  # list of player labels (use the same ordering for indexing as in this list)
         self.n = len(players)  # number of players
-        self.strategies = strategies  # dictionary of (player: list of possible strategies)
+        self.strategies = strategies  # list of player's list of strategies
         self.payoffs = payoffs  # list of n payoff numpy arrays (A_1 x A_2 X ...)
         self.pnes = None  # list of pure nash equilibria (index of strategy for each player)
         self.mnes = None  # list of mixed nash equilibria (index of strategy for each player)
@@ -71,23 +66,32 @@ class Game:
         """ set payoff matrices """
         pass
 
+    def set_mnes(self):
+        """ set mixed nash equilibria """
+        pass
+
     def set_pnes(self):
         """ set pure nash equilibria """
         self.set_dependency(['payoffs'])
         cpnes = list(np.argwhere(self.payoffs[0] == np.amax(self.payoffs[0], 0)))
         cpnes = [tuple(cpne) for cpne in cpnes]
-        num_strat = [len(st) for st in self.strategies.values()]
-
+        pnes = []
         for i in range(1, self.n):
-            for cpne in cpnes:
-                ind = cpne[:i] + (slice(num_strat[i]),) + cpne[i+1:]
-                if self.payoffs[i][cpne] != np.amax(self.payoffs[i][ind]):
+            pm = self.payoffs[i]
+            for cpne in cpnes[:]:
+                ind = cpne[:i] + (slice(None),) + cpne[i+1:]
+                if pm[cpne] < np.max(pm[ind]):
                     cpnes.pop(cpnes.index(cpne))
         self.pnes = cpnes
 
-    def set_mnes(self):
-        """ set mixed nash equilibria """
-        pass
+    def set_st_dict(self):
+        """ set the dictionary of player labels and strategies """
+        st_product = product(*self.strategies)
+        labels = [j for j in product(*[[i for i in range(len(item))] for item in self.strategies])]
+        st_dict = {}
+        for k, v in zip(labels, st_product):
+            st_dict.update({k: v})
+        self.st_dict = st_dict
 
     def set_dependency(self, dependencies):
         """ set instance variables that are needed"""
@@ -95,26 +99,21 @@ class Game:
             if eval('self.' + dependency) is None:
                 eval('self.set_' + dependency + '()')
 
-    def set_st_dict(self):
-        """ set the dictionary of player labels and strategies """
-        st = [self.strategies[pl] for pl in self.players]
-        st_product = product(*st)
-        labels = [j for j in product(*[[i for i in range(len(item))] for item in st])]
-        st_dict = {}
-        for k, v in zip(labels, st_product):
-            st_dict.update({k: v})
-        self.st_dict = st_dict
-
     def check_game(self):
         """ function for enforcing correct construction of a game definition """
-        pass
+        if self.n != len(self.strategies):
+            raise ValueError('mismatch in length of self.strategies and number of players')
+        if self.payoffs and len(self.payoffs) != self.n:
+            raise ValueError('mismatch in length of self.payoffs and number of players')
+        if self.payoffs and list(np.shape(self.payoffs[0])) != [len(s) for s in self.strategies]:
+            raise ValueError('payoff matrix not set to right dimensions according to strategy set')
 
 
 class FromPayoffGame(Game):
     """ define players and strategies through the given payoff matrix"""
     def __init__(self, payoffs):
         players = [i for i in range(len(payoffs))]  # player labels: 1 ... n
-        strategies = {pl: [i for i in range(st)] for (pl, st) in zip(players, np.shape(payoffs[0]))}  # strategy labels: 1 ... m_i
+        strategies = [[i for i in range(d)] for d in np.shape(payoffs[0])]  # strategy labels: 1 ... m_i
         Game.__init__(self, payoffs, players, strategies)
 
 
@@ -123,5 +122,5 @@ class FromIndexGame(Game):
     no initialization of the payoff matrix"""
     def __init__(self, n, n_strat):
         players = [i for i in range(n)]  # player labels: 1 ... n
-        strategies = {pl: [i for i in range(st)] for (pl, st) in zip(players, n_strat)}  # strategy labels: 1 ... m_i
+        strategies = [[i for i in range(num)] for num in n_strat]  # strategy labels: 1 ... m_i
         Game.__init__(self, None, players, strategies)

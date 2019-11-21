@@ -64,7 +64,15 @@ class Game:
 
     def set_payoffs(self):
         """ set payoff matrices """
-        pass
+        self.set_dependency(['st_dict'])
+        payoffs = [None]*self.n
+        for i in range(self.n):
+            s_dict_i = {}
+            for k, v in self.st_dict.items():
+                s_dict_i.update({k: self.U_i(i, v)})
+            payoff_i = np.array(dict_nlist(s_dict_i))
+            payoffs[i] = payoff_i
+        self.payoffs = payoffs
 
     def set_mnes(self):
         """ set mixed nash equilibria """

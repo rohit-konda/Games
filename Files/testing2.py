@@ -17,7 +17,6 @@ g.set_pnes()
 print(g.strategies, g.pnes)
 
 
-###### WELFARE AND DISTRIBUTION RULES !!!!!
 w = [0] + [1]*len(players)
 f = [0] + [factorial(j-1)/(exp(1) - 1)*(exp(1) - sum([1/factorial(i) for i in range(j)])) for j in range(len(players))]
 

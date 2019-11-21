@@ -42,18 +42,6 @@ class ResourceGame(SocialGame):
         and what players are covering it"""
         pass
 
-    def set_payoffs(self):
-        """ set payoff matrices """
-        self.set_dependency(['st_dict'])
-        payoffs = [None]*self.n
-        for i in range(self.n):
-            s_dict_i = {}
-            for k, v in self.st_dict.items():
-                s_dict_i.update({k: self.U_i(i, v)})
-            payoff_i = np.array(dict_nlist(s_dict_i))
-            payoffs[i] = payoff_i
-        self.payoffs = payoffs
-
 
 class CongestionGame(ResourceGame):
     """ framework for a congestion game """
@@ -83,6 +71,3 @@ class DistResGame(CongestionGame):
         self.values = values  # values (v_r) associated with each resource
         self.w = w  # w(j) welfare basis function ((n+1,) np.array)
         self.f = f  # f(j) design function for the utility ((n+1,) np.array)
-
-
-

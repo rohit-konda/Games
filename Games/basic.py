@@ -81,14 +81,15 @@ class Game:
     def set_pnes(self):
         """ set pure nash equilibria """
         self.set_dependency(['payoffs'])
-        cpnes = list(np.argwhere(self.payoffs[0] == np.amax(self.payoffs[0], 0)))
+        tolerance = 10**-8  # numerical tolerance for comparing floating numbers for pne 
+        cpnes = list(np.argwhere(self.payoffs[0] > np.amax(self.payoffs[0], 0) - tolerance))
         cpnes = [tuple(cpne) for cpne in cpnes]
         pnes = []
         for i in range(1, self.n):
             pm = self.payoffs[i]
             for cpne in cpnes[:]:
                 ind = cpne[:i] + (slice(None),) + cpne[i+1:]
-                if pm[cpne] < np.max(pm[ind]):
+                if pm[cpne] < np.max(pm[ind]) - tolerance:
                     cpnes.pop(cpnes.index(cpne))
         self.pnes = cpnes
 

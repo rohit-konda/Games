@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 Library for welfare resource games
-R Chandan, D Paccagnan, JR Marden (2019) Optimal mechanisms for distributed resource-allocation.
+R Chandan, D Paccagnan, JR Marden (2019) Utility Design for Distributed Resource Allocation - Part I: Characterizing and Optimizing the Exact Price of Anarchy
 """
 
 import numpy as np
@@ -61,9 +61,9 @@ class CompResourceGame(DistResGame):
             h[i] = -self.w[b+x]
         G[num][0] = -1
 
-        sol = self.poa_solver(c, G, h, None, None)
-        poa = 1/sol['primal objective']
-        f = [0.] + list(sol['x'])[1:]
+        obj, sol = self.poa_solver(c, G, h)
+        poa = 1./obj
+        f = [0.] + list(sol)[1:]
         return (poa, f)
 
     def dual_poa(self):
@@ -83,8 +83,8 @@ class CompResourceGame(DistResGame):
             h[i] = -self.w[b+x]
         G[num][0] = -1 
 
-        sol = self.poa_solver(c, G, h, None, None)
-        return 1/sol['primal objective']
+        obj, sol = self.poa_solver(c, G, h)
+        return 1./obj
 
     def primal_poa(self):     
         """ primal formulation for calculation of Price of Anarchy """
@@ -101,16 +101,41 @@ class CompResourceGame(DistResGame):
         b = np.array([[1]], dtype='float')
         h = np.zeros((num+1, 1))
 
-        sol = self.poa_solver(c, G, h, A, b)
-        return -1/sol['primal objective']
+        obj, sol = self.poa_solver(c, G, h, A, b)
+        game = self.worst_case(sol) # worst case game instance
+        return -1./obj, game
 
-    def poa_solver(self, c, G, h, A, b):
+    def poa_solver(self, c, G, h, A=None, b=None):
         """ function for solving the relevant optimization program"""
         if self.solver == 'cvxopt':
-            sol = lp(matrix(c), matrix(G), matrix(h), matrix(A) if A else None, matrix(b) if b else None)
+            c = matrix(c)
+            G = matrix(G)
+            h = matrix(h)
+            A = matrix(A) if A is not None else None
+            b = matrix(b) if b is not None else None
+            sol = lp(c, G, h, A, b)
             if sol['status'] == 'optimal':
-                return sol
+                return sol['primal objective'], sol['x']
             else:
+                print sol
                 raise ValueError('no feasible solution found')
         else:
             raise ValueError('indicated a invalid solver name for self.solver')
+
+    def worst_case(self, theta):
+        """ get worst case poa instance, returns a resource game outlined in Theorem 2 in Paper """
+        players = [i for i in range(self.n)]
+        values = []
+        strategies = [[(), ()] for p in players]
+        c = 0
+        for j in range(len(self.I)):
+                a, x, b = self.I[j]
+                val = round(theta[j], 8)
+                if val > 0:
+                    values += [val/self.n]*self.n
+                    ind = [(k % self.n) + c for k in range(2*self.n)]
+                    for p in players:
+                        strategies[p][0] = strategies[p][0] + tuple(ind[p:p+a+x])
+                        strategies[p][1] = strategies[p][1] + tuple(ind[p+self.n-b:p+self.n+x])
+                    c += self.n
+        return (players, strategies, values, self.w, self.f)

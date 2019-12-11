@@ -14,7 +14,7 @@ class ResourceGame(SocialGame):
         self.r_m = r_m  # number of resources
 
     def w_r(self, res, players):
-        """ welfare function, returns a scalar value dependent on the resource and which players select it"""
+        """ welfare function, returns a scalar value dependent on the resource and which players select it """
         pass
 
     def player_cover(self, strategies):
@@ -22,7 +22,7 @@ class ResourceGame(SocialGame):
         return [[j for j in range(self.n) if i in strategies[j]] for i in range(self.r_m)]
 
     def set_s_payoff(self):
-        """ set social payoff matrix"""
+        """ set social payoff matrix """
         self.set_dependency(['st_dict'])
         sp_dict = {}
         for k, v in self.st_dict.items():
@@ -32,14 +32,14 @@ class ResourceGame(SocialGame):
         self.s_payoff = np.array(dict_nlist(sp_dict))
 
     def U_i(self, i, strategy):
-        """ utility for the strategy for player i"""
+        """ utility for the strategy for player i """
         strategy_i = list(strategy[i])
         p_cover = self.player_cover(strategy)
         return sum([self.f_r(i, j, p_cover[j]) for j in strategy_i])
 
     def f_r(self, i, res, players):
         """ function design for the utility function depends on what resource,
-        and what players are covering it"""
+        and what players are covering it """
         pass
 
 
@@ -53,12 +53,12 @@ class CongestionGame(ResourceGame):
 
     def w_r(self, res, players):
         """ welfare function, returns a scalar value dependent on the resource,
-         and how many players select it"""
+         and how many players select it """
         return self.Wr[res, len(players)]
 
     def f_r(self, i, res, players):
         """ function design for the utility function depends on what resource,
-        and what players are covering it"""
+        and what players are covering it """
         return self.Fr[res, len(players)]
 
 

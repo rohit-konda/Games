@@ -126,11 +126,11 @@ class CompResourceGame(DistResGame):
         """ get worst case poa instance, returns a resource game outlined in Theorem 2 in Paper """
         players = [i for i in range(self.n)]
         values = []
-        strategies = [[(), ()] for p in players]
+        strategies = [[(), ()] for _ in players]
         c = 0
         for j in range(len(self.I)):
                 a, x, b = self.I[j]
-                val = round(theta[j], 8)
+                val = round(theta[j], 8)  # round theta to avoid ~0 value resources
                 if val > 0:
                     values += [val/self.n]*self.n
                     ind = [(k % self.n) + c for k in range(2*self.n)]

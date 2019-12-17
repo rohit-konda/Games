@@ -24,7 +24,7 @@ class InfoGame(Game):
 
 class DistInfoGame(InfoGame, DistResGame):
     """ Distributed Resource game with incomplete information of other agent strategies """
-    def __init__(self, players, strategies, infograph, values, w, f):
+    def __init__(self, players, strategies, values, w, f, infograph):
         InfoGame.__init__(self, players, strategies, infograph)
         DistResGame.__init__(self, players, strategies, values, w, f)
 

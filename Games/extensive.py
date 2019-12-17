@@ -67,67 +67,6 @@ class Node:
 
 players = ['P1', 'P2']
 n1 = Node('a1', player=players[0])
-n2 = Node('a2', player=players[0])
-n3 = Node('a3', player=players[0])
-n4 = Node('a4', player=players[0])
-n5 = Node('a5', player=players[0])
-n6 = Node('b1', player=players[1])
-n7 = Node('b2', player=players[1])
-n8 = Node('b3', player=players[1])
-n9 = Node('b4', player=players[1])
-n10 = Node('b5', player=players[1])
-n11 = Node('b6', player=players[1])
-n12 = Node('b7', player=players[1])
-n13 = Node('b8', player=players[1])
-n14 = Node('b9', player=players[1])
-n15 = Node('b10', player=players[1])
-n16 = Node('v1', value=(-1, 1))
-n17 = Node('v2', value=(1, -1))
-n18 = Node('v3', value=(-1, 1))
-n19 = Node('v4', value=(1, -1))
-n20 = Node('v5', value=(2, -2))
-n21 = Node('v6', value=(1, -1))
-n22 = Node('v7', value=(-1, 1))
-n23 = Node('v8', value=(1, -1))
-n24 = Node('v9', value=(1, -1))
-n25 = Node('v10', value=(3, -3))
-n26 = Node('v11', value=(3, -3))
-n27 = Node('v12', value=(1, -1))
-n28 = Node('v13', value=(1, -1))
-n29 = Node('v14', value=(-2, 2))
-n30 = Node('v15', value=(1, -1))
-n31 = Node('v16', value=(-2, 2))
-game_tree = [
-	(n1, 'T', n6),
-	(n2, 'T', n8),
-	(n3, 'T', n10),
-	(n4, 'T', n12),
-	(n5, 'T', n14),
-	(n1, 'B', n7),
-	(n2, 'B', n9),
-	(n3, 'B', n11),
-	(n4, 'B', n13),
-	(n5, 'B', n15),
-	(n6, 'L', n2),
-	(n7, 'L', n4),
-	(n8, 'L', n16),
-	(n9, 'L', n18),
-	(n10, 'L', n20),
-	(n11, 'L', n22),
-	(n12, 'L', n24),
-	(n13, 'L', n26),
-	(n14, 'L', n28),
-	(n15, 'L', n30),
-	(n6, 'R', n3),
-	(n7, 'R', n5),
-	(n8, 'R', n17),
-	(n9, 'R', n19),
-	(n10, 'R', n21),
-	(n11, 'R', n23),
-	(n12, 'R', n25),
-	(n13, 'R', n27),
-	(n14, 'R', n29),
-	(n15, 'R', n31)
-	]
+
 
 info_set = [[n1], [n2], [n3], [n4], [n5], [n6, n7], [n8, n9], [n10], [n11], [n12, n13], [n14, n15]]

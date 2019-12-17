@@ -29,7 +29,7 @@ def get_gm(n, m, s):
 	return (strategies, values)
 
 
-n = 3  # number of players
+n = 5  # number of players
 m = 8  # number of resources
 s = 3  # number of strategies for each player
 players = [i for i in range(n)]

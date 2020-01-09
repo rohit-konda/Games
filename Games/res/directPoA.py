@@ -1,53 +1,76 @@
 #!/usr/bin/env python
 """
-Library for computing PoA through linear program for loss of information
+Explicit construction for calculating PoA - derived from 
+R Chandan, D Paccagnan, JR Marden (2019) Utility Design for Distributed Resource Allocation - Part I: Characterizing and Optimizing the Exact Price of Anarchy
 """
 
 import numpy as np
-from Games.res.computable import CompResourceGame
+from Games.res.resource import ResourceGame, DistResGame
 from Games.res.incomplete import DistInfoGame
 from itertools import product
 
 
-class InfoPoaGame(CompResourceGame, DistInfoGame):
+
+
+class CompPoaGame(ResourceGame):
     """ framework for resource games with computable price of anarchy """
-    def __init__(self, players, strategies, values, w, f, infograph, solver='cvxopt'):
-        CompResourceGame.__init__(self, players, strategies, values, w, f, solver)
-        DistInfoGame.__init__(self, players, strategies, values, w, f, infograph)
-        self.partition = list(product([1, 2, 3, 4], repeat=self.n))
+    def __init__(self, players, strategies, values, solver='cvxopt'):
+        ResourceGame.__init__(self, players, strategies, len(values))
+        self.partition = list(product([1, 2, 3, 4], repeat=self.n))[:-1]
+        self.solver = solver
+        self.sol = None  # solver output
 
     def primal_poa(self):     
         """ primal formulation for calculation of Price of Anarchy """
-        N = 4**self.n
+        N = 4**self.n - 1
         c = np.zeros((N,), dtype='float')
         cons_1 = np.zeros((self.n, N), dtype='float')
         A = np.zeros((1, N), dtype='float')
         for i in range(len(self.partition)):
             p = self.partition[i]
-            opt = [k for k in range(self.n) if p[k]==2 or p[k]==3]
-            nash = [k for k in range(self.n) if p[k]==1 or p[k]==2]
-            c[i] = -self.w[len(opt)]
-            A[0, i] = self.w[len(nash)]
-            for j in range(self.n):
-                nash_u = 0
-                opt_u = 0
-                if j in nash:
-                    nash_u = self.f[len(self.viewed(nash, j))]
-                if j in opt:
-                    opt_u = self.f[len(self.viewed(opt, j))]
-                cons_1[j][i] = nash_u - opt_u
+            Na = [k for k in range(self.n) if p[k]==1]
+            Nx = [k for k in range(self.n) if p[k]==2]
+            Nb = [k for k in range(self.n) if p[k]==3]
+            
+            c[i] = -self.w(Nb + Nx)
+            A[0, i] = self.w(Na + Nx)
+            cons_1[j][i] = self.nash_poa(j, Na, Nb, Nx)
 
         cons_2 = np.identity(N)
         G = -np.vstack((cons_1, cons_2))
         h = np.zeros((N+self.n, 1))
         b = np.array([[1]], dtype='float')
-        obj, sol = self.poa_solver(c, G, h, A, b)
-        game = self.worst_case(np.array(sol).flatten()) # worst case game instance
-        return -1./obj, game 
+        
+        self.lp_solver(c, G, h, A, b)
+        game = self.worst_case(np.array(self.sol['x']).flatten()) # worst case game instance
+        return -1./self.sol['primal objective'], game 
 
-    def viewed(self, covered, j):
-        """ modify the outcome based on which other agents are viewed """
-        return [k for k in covered if k in self.infograph[j] + [j]]
+    def nash_poa(self, j, Na, Nb, Nx):
+        """ define the nash constraint for the computable poa calculation """
+        for j in range(self.n):  # Nash condition
+            if j in Na:
+                return self.f_poa(j, Na + Nx)
+            elif j in Nb:
+                return -self.f_poa(j, Na + Nx + [j])
+            else:
+                return 0
+
+    def f_poa(self, i, players):
+        """ design distribution function """
+        pass
+
+    def w_poa(self, players):
+        """ welfare function """
+        pass
+
+    def f_r(self, i, res, players):
+        """ function design for the utility function depends on what resource,
+        and what players are covering it """
+        return self.values[res] * self.f_poa(i, players)
+
+    def w_r(self, res, players):
+        """ welfare function, returns a scalar value dependent on the resource and which players select it """
+        return self.values[res] * self.w_poa(players)
 
     def worst_case(self, theta):
         """ get worst case instance """
@@ -56,10 +79,10 @@ class InfoPoaGame(CompResourceGame, DistInfoGame):
         strategies = [[(), ()] for _ in players]
         c = 0
         for i in range(len(theta)):
-            val = round(theta[i], 8) # round theta to avoid ~0 value resources
+            val = round(theta[i], 7) # round theta to avoid ~0 value resources
             if  val > 0:
                 values.append(val)
-                for j in range(n):
+                for j in range(self.n):
                     if self.partition[i][j] == 1:
                         strategies[j][0] += (c,)
                     elif self.partition[i][j] == 2:
@@ -69,3 +92,52 @@ class InfoPoaGame(CompResourceGame, DistInfoGame):
                         strategies[j][1] += (c,)
                 c += 1
         return players, strategies, values, self.w, self.f, self.infograph
+
+    def lp_solver(self, c, G, h, A=None, b=None):
+        """ LP solver method constructor"""
+        if self.solver == 'cvxopt':
+            c = matrix(c)
+            G = matrix(G)
+            h = matrix(h)
+            A = matrix(A) if A is not None else None
+            b = matrix(b) if b is not None else None
+            self.sol = lp(c, G, h, A, b)
+            if self.sol['status'] != 'optimal':
+                raise ValueError('no feasible solution found')
+        else:
+            raise ValueError('indicated a invalid solver name for self.solver')
+
+
+class ResCompPoaGame(CompPoaGame, DistResGame):
+    """ framework for resource games with computable price of anarchy """
+    def __init__(self, players, strategies, values, w, f, solver='cvxopt'):
+        CompPoaGame.__init__(players, strategies, values, solver)
+        DistResGame.__init__(self, players, strategies, values, w, f)
+
+    def f_r(self, i, res, players):
+        """ function design for the utility function depends on what resource,
+        and what players are covering it """
+        return DistResGame.f_r(i, res, players)
+    
+    def w_r(self, res, players):
+        """ welfare function, returns a scalar value dependent on the resource and which players select it """
+        return DistResGame.w_r(i, res, players)  
+
+    def f_poa(self, i, players):
+        """ design distribution function """
+        return self.f[len(players)]
+
+    def w_poa(self, players):
+        """ welfare function """
+        return self.w[len(players)]
+
+
+class ResInfoPoaGame(ResCompPoaGame, DistInfoGame):
+    """ framework for resource games with computable price of anarchy """
+    def __init__(self, players, strategies, values, w, f, infograph, solver='cvxopt'):
+        ResCompPoaGame.__init__(players, strategies, values, solver)
+        DistInfoGame.__init__(self, strategies, values, w, f, infograph)
+
+    def f_poa(self, i, players):
+        """ design distribution function """
+        return self.f[len(k for k in players if k in self.infograph[j] + [j])]

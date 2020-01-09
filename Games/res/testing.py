@@ -1,75 +1,27 @@
-#!/usr/bin/env python
-"""
-Tutorial example for computing price of anarchy for a class of resource allocation games
-"""
-
 from Games.basic import *
-#from resource import *
 from directPoA import *
 from incomplete import *
 from computable import *
 
 
-def pr_gm(gm):
-	gm.set_posa()  # calculate PoA and PoS
-	print 'pne', gm.pnes  # pure nash equilibria
-	print 'payoff', np.array([gm.s_payoff[pne] for pne in gm.pnes])  # payoff 
-	print 'so', gm.so  # social optimal
-	print 'posa', gm.posa  # social poa
-
-'''
-## First Example in Submod paper (Matches)
-
-
-players = [i for i in range(4)]
-strategies = [[(), (0,), (2,)], [(), (1,), (2,)], [(), (2,), (3,), (4,)], [(), (2,), (3,), (4,)]]
-res = [2, 1, 4, 2, 1]
-w = [0, 1, 1, 1, 1]
-f = [0, 1, 0, 0, 0]
-
-game = DistResGame(players, strategies, res, w, f)
-game.plot([s[1] for s in strategies])
-#pr_gm(game)
-
-'''
-## Second Example in Submod Paper (Matches)
-
-'''
-players_2 = [i for i in range(4)]
-strategies_2 = [[(), (0,), (1,)], [(), (1,)], [(), (1,), (2,)], [(), (3,)]]
-res_2 = [1, 1, 1, 0]
-info = [[], [0], [], [2]]
-
-game_2 = DistInfoGame(players_2, strategies_2, info, res_2, w, f)
-strategy = [(0,), (1,), (1,), (3,)]
-
-#pr_gm(game_2)
-
-n = 5
-c1 = 1./(factorial(n-1)*(n-1))
-def c2(j): return sum([1./factorial(i) for i in range(j, n)])
-gairing_n_f = [0] + [factorial(j-1)*(c1 + c2(j))/(c1 + c2(1)) for j in range(1, n+1)]  # gairing distribution rule for finite n
-'''
-
 n = 3
 players = [i for i in range(n)]
 strategies = [[(), ()] for _ in range(n)]
 values = []
-infograph = [[1, 2], [2], []]
+infograph = [[0], [1], []]
 w = [0, 1, 1, 1, 1]
-f = [0, 1, .42, .25, .18]
+#f = [0, 1, .42, .25, .18]
 # f = [0, 1, .33, .25, .2]
 f = [0, 1, 0, 0, 0]
-game = InfoPoaGame(players, strategies, values, w, f, infograph)
+
+game = InfoPoaSumGame(players, strategies, values, w, f, infograph)
 poa, sol = game.primal_poa()
-print 'computed', poa
+print('computed', poa)
 c = 0
 
-print 'values', values
-print 'strategies', strategies
-gam = DistInfoGame(players, strategies, infograph, values, w, f)
-gam.set_s_payoff()
-print 'payoff', gam.s_payoff[(0, 0, 0)], gam.s_payoff[(1, 1, 1)]
+gam = DistInfoGame(*sol)
 
-
-
+gam.set_s_payoff()	
+print('payoff', gam.s_payoff[(0, 0, 0)], gam.s_payoff[(1, 1, 1)])
+print('values', gam.values)
+print('strategies', gam.strategies)

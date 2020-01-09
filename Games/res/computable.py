@@ -42,6 +42,7 @@ class CompResourceGame(DistResGame):
         self.I = I(self.n)
         self.I_r = I_r(self.n)
         self.solver = solver
+        self.sol = None  # solver output
 
     def function_poa(self):
         """ returns the distribution rule f for the optimal PoA """
@@ -61,9 +62,9 @@ class CompResourceGame(DistResGame):
             h[i] = -self.w[b+x]
         G[num][0] = -1
 
-        obj, sol = self.poa_solver(c, G, h)
-        poa = 1./obj
-        f = [0.] + list(sol)[1:]
+        self.lp_solver(c, G, h)
+        poa = 1./self.sol['primal objective']
+        f = [0.] + list(sol['x'])[1:]
         return (poa, f)
 
     def dual_poa(self):
@@ -83,8 +84,8 @@ class CompResourceGame(DistResGame):
             h[i] = -self.w[b+x]
         G[num][0] = -1 
 
-        obj, sol = self.poa_solver(c, G, h)
-        return 1./obj
+        self.lp_solver(c, G, h)
+        return 1./self.sol['primal objective']
 
     def primal_poa(self):     
         """ primal formulation for calculation of Price of Anarchy """
@@ -101,11 +102,11 @@ class CompResourceGame(DistResGame):
         b = np.array([[1]], dtype='float')
         h = np.zeros((num+1, 1))
 
-        obj, sol = self.poa_solver(c, G, h, A, b)
-        game = self.worst_case(sol) # worst case game instance
-        return -1./obj, game
+        self.lp_solver(c, G, h, A, b)
+        game = self.worst_case(self.sol['x']) # worst case game instance
+        return -1./self.sol['primal objective'], game
 
-    def poa_solver(self, c, G, h, A=None, b=None):
+    def lp_solver(self, c, G, h, A=None, b=None):
         """ function for solving the relevant optimization program"""
         if self.solver == 'cvxopt':
             c = matrix(c)
@@ -113,11 +114,8 @@ class CompResourceGame(DistResGame):
             h = matrix(h)
             A = matrix(A) if A is not None else None
             b = matrix(b) if b is not None else None
-            sol = lp(c, G, h, A, b)
-            if sol['status'] == 'optimal':
-                return sol['primal objective'], sol['x']
-            else:
-                print sol
+            self.sol = lp(c, G, h, A, b)
+            if self.sol['status'] != 'optimal':
                 raise ValueError('no feasible solution found')
         else:
             raise ValueError('indicated a invalid solver name for self.solver')

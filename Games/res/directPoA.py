@@ -8,8 +8,8 @@ import numpy as np
 from Games.res.resource import ResourceGame, DistResGame
 from Games.res.incomplete import DistInfoGame
 from itertools import product
-
-
+from cvxopt.solvers import lp
+from cvxopt import matrix
 
 
 class CompPoaGame(ResourceGame):
@@ -31,10 +31,11 @@ class CompPoaGame(ResourceGame):
             Na = [k for k in range(self.n) if p[k]==1]
             Nx = [k for k in range(self.n) if p[k]==2]
             Nb = [k for k in range(self.n) if p[k]==3]
-            
-            c[i] = -self.w(Nb + Nx)
-            A[0, i] = self.w(Na + Nx)
-            cons_1[j][i] = self.nash_poa(j, Na, Nb, Nx)
+
+            c[i] = -self.w_poa(Nb + Nx)
+            A[0, i] = self.w_poa(Na + Nx)
+            for j in range(self.n):
+                cons_1[j][i] = self.nash_poa(j, Na, Nb, Nx)
 
         cons_2 = np.identity(N)
         G = -np.vstack((cons_1, cons_2))
@@ -47,13 +48,12 @@ class CompPoaGame(ResourceGame):
 
     def nash_poa(self, j, Na, Nb, Nx):
         """ define the nash constraint for the computable poa calculation """
-        for j in range(self.n):  # Nash condition
-            if j in Na:
-                return self.f_poa(j, Na + Nx)
-            elif j in Nb:
-                return -self.f_poa(j, Na + Nx + [j])
-            else:
-                return 0
+        if j in Na:
+            return self.f_poa(j, Na + Nx)
+        elif j in Nb:
+            return -self.f_poa(j, Na + Nx + [j])
+        else:
+            return 0
 
     def f_poa(self, i, players):
         """ design distribution function """
@@ -91,7 +91,7 @@ class CompPoaGame(ResourceGame):
                     elif self.partition[i][j] == 3:
                         strategies[j][1] += (c,)
                 c += 1
-        return players, strategies, values, self.w, self.f, self.infograph
+        return players, strategies, values, self.w, self.f
 
     def lp_solver(self, c, G, h, A=None, b=None):
         """ LP solver method constructor"""
@@ -108,20 +108,20 @@ class CompPoaGame(ResourceGame):
             raise ValueError('indicated a invalid solver name for self.solver')
 
 
-class ResCompPoaGame(CompPoaGame, DistResGame):
-    """ framework for resource games with computable price of anarchy """
+class ResPoaGame(CompPoaGame, DistResGame):
+    """ framework for dist resource allocation games with computable price of anarchy """
     def __init__(self, players, strategies, values, w, f, solver='cvxopt'):
-        CompPoaGame.__init__(players, strategies, values, solver)
+        CompPoaGame.__init__(self, players, strategies, values, solver)
         DistResGame.__init__(self, players, strategies, values, w, f)
 
     def f_r(self, i, res, players):
         """ function design for the utility function depends on what resource,
         and what players are covering it """
-        return DistResGame.f_r(i, res, players)
+        return DistResGame.f_r(self, i, res, players)
     
     def w_r(self, res, players):
         """ welfare function, returns a scalar value dependent on the resource and which players select it """
-        return DistResGame.w_r(i, res, players)  
+        return DistResGame.w_r(self, res, players)  
 
     def f_poa(self, i, players):
         """ design distribution function """
@@ -132,12 +132,12 @@ class ResCompPoaGame(CompPoaGame, DistResGame):
         return self.w[len(players)]
 
 
-class ResInfoPoaGame(ResCompPoaGame, DistInfoGame):
-    """ framework for resource games with computable price of anarchy """
+class ResInfoPoaGame(ResPoaGame, DistInfoGame):
+    """ framework for information dependent resource allocation games with computable price of anarchy """
     def __init__(self, players, strategies, values, w, f, infograph, solver='cvxopt'):
-        ResCompPoaGame.__init__(players, strategies, values, solver)
-        DistInfoGame.__init__(self, strategies, values, w, f, infograph)
+        ResPoaGame.__init__(self, players, strategies, values, w, f, solver)
+        DistInfoGame.__init__(self, players, strategies, values, w, f, infograph)
 
     def f_poa(self, i, players):
         """ design distribution function """
-        return self.f[len(k for k in players if k in self.infograph[j] + [j])]
+        return self.f[len([k for k in players if k in self.infograph[i] + [i]])]

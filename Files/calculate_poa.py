@@ -1,7 +1,7 @@
 from Games.basic import *
-from directPoA import *
-from incomplete import *
-from resource import *
+from Games.res.directPoA import *
+from Games.res.incomplete import *
+from Games.res.resource import *
 from prettytable import PrettyTable
 from itertools import product
 from math import factorial, exp
@@ -18,6 +18,7 @@ def gnf(n):
 	def c2(j): return sum([1./factorial(i) for i in range(j, n)])
 	c1 = 1./(factorial(n-1)*(n-1))
 	return [0] + [factorial(j-1)*(c1 + c2(j))/(c1 + c2(1)) for j in range(1, n+1)]
+
 
 # set up calculation 
 
@@ -75,6 +76,23 @@ graphs = [
 [[], [], [], [], []],
 ]
 
+graphs = [
+[[1, 2], [0, 2], [0, 1]],
+[[1], [0, 2], [0, 1]],
+[[], [0, 2], [0, 1]],
+[[1], [0], [0, 1]],
+[[1], [2], [0, 1]],
+[[2], [2], [0, 1]],
+[[2], [0], [0, 1]],
+[[1], [0], [1]],
+[[1], [2], [1]],
+[[2], [0], [0]],
+[[2], [0], []],
+[[], [2], [0]],
+[[], [2], [1]],
+[[1], [], []],
+[[], [], []],
+]
 
 types = product(graphs, [0])
 
@@ -87,11 +105,11 @@ for e in types:
 	dist = functions[e[1]](N)
 	fname = fnames[e[1]]
 	welfare = w(N)
-	game = InfoPoaGame([i for i in range(N)], [[(), ()] for _ in range(N)], [0], welfare, dist, graph)
+	game = ResInfoPoaGame([i for i in range(N)], [[(), ()] for _ in range(N)], [0], welfare, dist, graph)
 	#print(graph)
 	try:
 		poa, sol = game.primal_poa()
-		gam = DistResGame(*sol[:-1])
+		gam = DistResGame(*sol)
 		val = gam.values
 		strat = gam.strategies
 		#t.add_row([N, graph, fname, poa, val, strat])
@@ -100,5 +118,3 @@ for e in types:
 		#t.add_row([N, graph, fname, '-', '-', '-'])
 		t.add_row([N, graph, fname, '-'])
 print(t)
-
-#t.append()

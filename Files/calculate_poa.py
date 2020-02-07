@@ -8,7 +8,7 @@ from math import factorial, exp
 
 # functions 
 
-def w(n): return [0] + [1]*n  # welfare for covering games
+def w(n): return [0, 1, 1] + [1]*(n-2)  # welfare for covering games
 def mf(n): return [0, 1] + [0]*(n-1)  # marginal distribution rule
 def sf(n): return [0] + [1./j for j in range(1,n+1)]  # Shapley distribution rule
 # gairing distribution rule for infinite n
@@ -76,28 +76,28 @@ graphs = [
 [[], [], [], [], []],
 ]
 
+#N = 4
+#items = tuple([[list(i) for i in powerset([i for i in range(N) if i != j])] for j in range(N)])
+#graphs = list(product([[], [1], [2], [1, 2]], [[], [0], [2], [0, 2]], [[], [0], [1], [0, 1]]))
+#graphs = list(product(*items))
+#graphs = [list(el) for el in graphs]
+
 graphs = [
-[[1, 2], [0, 2], [0, 1]],
-[[1], [0, 2], [0, 1]],
-[[], [0, 2], [0, 1]],
-[[1], [0], [0, 1]],
-[[1], [2], [0, 1]],
-[[2], [2], [0, 1]],
-[[2], [0], [0, 1]],
-[[1], [0], [1]],
-[[1], [2], [1]],
-[[2], [0], [0]],
-[[2], [0], []],
-[[], [2], [0]],
-[[], [2], [1]],
-[[1], [], []],
-[[], [], []],
+[[], [0]],
+[[2], [0, 2], [0, 1]],
+[[2, 3], [0, 2, 3], [0, 1, 3], [0, 1, 2]],
+[[2, 3, 4], [0, 2, 3, 4], [0, 1, 3, 4], [0, 1, 2, 4], [0, 1, 2, 3]],
+[[2, 3, 4, 5], [0, 2, 3, 4, 5], [0, 1, 3, 4, 5], [0, 1, 2, 4, 5], [0, 1, 2, 3, 5], [0, 1, 2, 3, 4]],
 ]
 
-types = product(graphs, [0])
+graphs = [[[2], [0, 2], [0, 1]]]
+
+types = product(graphs, [3])
 
 #t = PrettyTable(['n', 'graph', 'dist_func', 'PoA', 'values', 'strategies'])
-t = PrettyTable(['n', 'graph', 'dist_func', 'PoA'])
+t = PrettyTable(['n', 'PoA', 'values', 'strategies'])
+
+slist = []
 
 for e in types:
 	graph = e[0]
@@ -113,8 +113,10 @@ for e in types:
 		val = gam.values
 		strat = gam.strategies
 		#t.add_row([N, graph, fname, poa, val, strat])
-		t.add_row([N, graph, fname, poa])
+		slist.append([N, poa, val, strat])
 	except Exception as e:
 		#t.add_row([N, graph, fname, '-', '-', '-'])
 		t.add_row([N, graph, fname, '-'])
-print(t)
+print game.f
+for p in slist:
+	print p[0], p[1]#, p[2], p[3]

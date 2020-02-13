@@ -1,91 +1,143 @@
 #!/usr/bin/env python
 """
-Basic library of game class definitions and relevant helper functions
+
+Author : Rohit Konda
+
+Defines the basic strategic form game construction
 """
 
 import numpy as np
-from itertools import chain, combinations, product
-from cvxopt import matrix, solvers
-solvers.options['show_progress'] = False  # remove print output of cvxopt
-
-
-#  Algorithms  #
-
-
-def powerset(iterable):
-    """ returns the powerset of an iterable object (as a list of tuples)"""
-    s = list(iterable)
-    return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
-
-
-def flatten(iterable):
-    """ flatten a nested list into a single list """
-    return [i for sublist in iterable for i in sublist]
-
-
-def dict_nlist(dic):
-    """ create a nested list from a dictionary of indices and values """
-
-    def create_nlist(dim):
-        """ recursively create a nested list according to a list of dimensions dim """
-        return [create_nlist(dim[1:]) if len(dim) > 1 else None for _ in range(dim[0])]
-
-    def nlist_set(nlist, ind, val):
-        """ set a specific list of indexes ind from a nested list """
-        sublist = nlist
-        for i in ind[:-1]:
-            sublist = sublist[i]
-        sublist[ind[-1]] = val
-
-    lengths = [max(pos)+1 for pos in map(list, zip(*dic.keys()))]
-    nestedlist = create_nlist(lengths)
-    for k, v in dic.items():
-        nlist_set(nestedlist, k, v)
-    return nestedlist
-
-
-#  Game Frameworks  #
+from itertools import product
 
 
 class Game:
-    """ basic game class """
-    def __init__(self, payoffs, players, strategies):
-        self.players = players  # list of player labels (use the same ordering for indexing as in this list)
-        self.n = len(players)  # number of players
-        self.strategies = strategies  # list of player's list of strategies
-        self.payoffs = payoffs  # list of n payoff numpy arrays (A_1 x A_2 X ...)
-        self.pnes = None  # list of pure nash equilibria (index of strategy for each player)
-        self.mnes = None  # list of mixed nash equilibria (index of strategy for each player)
-        self.st_dict = None  # dictionary of {(tuple of player labels): (tuple of player strategies)}
+    """
+    Class definition for the most basic form of a game.
+    Parent class for all other game constructions.
 
-    def U_i(self, i, strategy):
-        """ utility for the strategy for player i"""
-        pass
+    Attributes:
+        players (list(str)): list defining a string label for each player i.
+        actions (list(obj)): list of action sets A_i for each player i.
+    """
+
+    def __init__(self, players, actions, payoffs=None):
+        self.players = players
+        self.actions = actions
+
+        self.check_game()
+
+    def check_game(self):
+        """ check if game construction is valid
+
+        Raises:
+            ValueError
+        """
+        raise NotImplementedError
+
+    def U_i(self, i, a):
+        """ utility function for player i,
+        when all players play according to action a
+
+        Args:
+            i (int): which player to calculate payoff
+            a (list(obj)): list of which actions that each player plays
+
+        Returns:
+            (obj): payoff to player i
+        """
+        raise NotImplementedError
+
+
+class FiniteGame(Game):
+    """
+    Class definition for a finite player, finite strategy set game
+
+    Attributes:
+        players (list(str)): list defining a string label for each player i.
+        N (int): number of players in the game.
+        actions (list(list(obj))): list of actions A_i for each player i.
+        num_act (list(int)): list of number of actions for each player i.
+        payoffs (list(array)): list of payoff arrays for each player i.
+        des (list(tuple)): list of all dominated equilibria (tuple of each player's strategy index a_i).
+        pnes (list(tuple)): list of all pure nash equilibria (tuple of each player's strategy index a_i).
+        mnes (list(array)): list of mixed nash equilibria (array defining prob distribution over strategy set A).
+        ces (list(array)): list of correlated nash equilibria (array defining prob distribution over strategy set A).
+        cces (list(array)): list of coarse correlated nash equilibria (array defining prob distribution over strategy set A).
+    """
+
+    def __init__(self, players, actions, payoffs=None):
+        Game.__init__(self, players, actions)
+        self.N = len(players)
+        self.num_act = [len(A_i) for A_i in actions]
+        self.payoffs = payoffs
+        self.des = None
+        self.pnes = None
+        self.mnes = None
+        self.ces = None
+        self.cces = None
+
+        self.check_game()
+
+    def check_game(self):
+        """ check if game construction is valid
+
+        Raises:
+            ValueError
+        """
+        if self.N != len(self.actions):
+            raise ValueError('mismatch in number of self.players and A_i in self.actions')
+
+        if self.payoffs and len(self.payoffs) != self.N:
+            raise ValueError('mismatch in number of self.players and length of self.payoffs')
+
+        if self.payoffs and list(np.shape(self.payoffs[0])) != self.num_act:
+            raise ValueError('shape of payoff arrays must match self.num_act')
+
+        if self.payoffs and any([np.shape(self.payoffs[0]) != np.shape(pay) for pay in self.payoffs]):
+            raise ValueError('shape of arrays in self.payoffs must match each other')
 
     def set_payoffs(self):
-        """ set payoff matrices """
-        self.set_dependency(['st_dict'])
-        payoffs = [None]*self.n
-        for i in range(self.n):
-            s_dict_i = {}
-            for k, v in self.st_dict.items():
-                s_dict_i.update({k: self.U_i(i, v)})
-            payoff_i = np.array(dict_nlist(s_dict_i))
+        """ fill out payoff matrices using utility functions (if not given in construction)
+
+        Note:
+            setter method for self.payoffs
+        """
+        payoffs = [None]*self.N
+        for i in range(self.N):
+            payoff_i = np.zeros(self.num_act)
+            # generate all possible types of action indices
+            for a in product(*[range(n_i) for n_i in self.num_act]):
+                payoff_i[a] = self.U_i(i, list(a))
             payoffs[i] = payoff_i
         self.payoffs = payoffs
 
-    def set_mnes(self):
-        """ set mixed nash equilibria """
+    def set_des(self):
+        """ find dominated equilibria for the defined strategic form game
+
+        Note:
+            setter method for self.mnes
+        """
         pass
 
     def set_pnes(self):
-        """ set pure nash equilibria """
-        self.set_dependency(['payoffs'])
-        tolerance = 10**-8  # numerical tolerance for comparing floating numbers for pne 
+        """ find pure nash equilibria for the defined strategic form game
+        through a brute force search through self.payoffs
+
+        Note:
+            setter method for self.pnes
+
+        Raises:
+            ValueError: if self.payoffs is None
+        """
+        if self.payoffs is None:
+            raise ValueError('must set value of self.payoffs')
+
+        tolerance = 10**-8  # numerical tolerance for comparing floats
+        # candidate pure nash equilibria
         cpnes = list(np.argwhere(self.payoffs[0] > np.amax(self.payoffs[0], 0) - tolerance))
         cpnes = [tuple(cpne) for cpne in cpnes]
         pnes = []
-        for i in range(1, self.n):
+        for i in range(1, self.N):
             pm = self.payoffs[i]
             for cpne in cpnes[:]:
                 ind = cpne[:i] + (slice(None),) + cpne[i+1:]
@@ -93,43 +145,55 @@ class Game:
                     cpnes.pop(cpnes.index(cpne))
         self.pnes = cpnes
 
-    def set_st_dict(self):
-        """ set the dictionary of player labels and strategies """
-        st_product = product(*self.strategies)
-        labels = [j for j in product(*[[i for i in range(len(item))] for item in self.strategies])]
-        st_dict = {}
-        for k, v in zip(labels, st_product):
-            st_dict.update({k: v})
-        self.st_dict = st_dict
+    def set_mnes(self):
+        """ find mixed nash equilibria for the defined strategic form game
 
-    def set_dependency(self, dependencies):
-        """ set instance variables that are needed"""
-        for dependency in dependencies:
-            if eval('self.' + dependency) is None:
-                eval('self.set_' + dependency + '()')
+        Note:
+            setter method for self.mnes
+        """
+        pass
 
-    def check_game(self):
-        """ function for enforcing correct construction of a game definition """
-        if self.n != len(self.strategies):
-            raise ValueError('mismatch in length of self.strategies and number of players')
-        if self.payoffs and len(self.payoffs) != self.n:
-            raise ValueError('mismatch in length of self.payoffs and number of players')
-        if self.payoffs and list(np.shape(self.payoffs[0])) != [len(s) for s in self.strategies]:
-            raise ValueError('payoff matrix not set to right dimensions according to strategy set')
+    def set_ces(self):
+        """ find correlated equilibria for the defined strategic form game
 
+        Note:
+            setter method for self.ces
+        """
+        pass
 
-class FromPayoffGame(Game):
-    """ define players and strategies through the given payoff matrix"""
-    def __init__(self, payoffs):
-        players = [i for i in range(len(payoffs))]  # player labels: 1 ... n
-        strategies = [[i for i in range(d)] for d in np.shape(payoffs[0])]  # strategy labels: 1 ... m_i
-        Game.__init__(self, payoffs, players, strategies)
+    def set_cces(self):
+        """ find coarse correlated equilibria for the defined strategic form game
+
+        Note:
+            setter method for self.cces
+        """
+        pass
 
 
-class FromIndexGame(Game):
-    """ define players through indexing the number of players and the number of strategies,
-    no initialization of the payoff matrix"""
-    def __init__(self, n, n_strat):
-        players = [i for i in range(n)]  # player labels: 1 ... n
-        strategies = [[i for i in range(num)] for num in n_strat]  # strategy labels: 1 ... m_i
-        Game.__init__(self, None, players, strategies)
+class StrategicGame(Game):
+    """
+    Class definition for a classic strategic form game.
+
+    Attributes:
+        payoffs (list(array)): list of payoff arrays for each player i.
+        players (list(str)): list defining a string label for each player i.
+        actions (list(list(obj))): list of actions A_i for each player i.
+    """
+
+    def __init__(self, payoffs, players=None, actions=None):
+        players = players if players else [str(i) for i in range(len(payoffs))]
+        actions = actions if actions else [[i for i in range(d)] for d in np.shape(payoffs[0])]
+        Game.__init__(self, players, actions, payoffs)
+
+    def U_i(self, i, a):
+        """ utility function for player i,
+        when all players play according to action a
+
+        Args:
+            i (int): which player to calculate payoff
+            a (list(int)): list of which actions that each player plays
+
+        Returns:
+            (int): payoff to player i
+        """
+        return self.payoffs[i][tuple(a)]

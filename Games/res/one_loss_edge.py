@@ -3,7 +3,7 @@
 Explicit construction for calculating PoA for 1 lost edge
 """
 
-from Games.res.directPoA import *
+from games.res.directPoA import *
 from computable import *
 from itertools import product
 from math import factorial, exp

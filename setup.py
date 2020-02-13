@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-setup(name='Games',
+setup(name='games',
       version='1.0',
       description='python package for defining various types of games',
       URL='-',

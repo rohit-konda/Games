@@ -10,8 +10,6 @@ Summary:
 """
 
 from abc import ABC, abstractmethod
-from collections.abc import Set
-
 
 
 class _Indexed:
@@ -112,6 +110,9 @@ class Player(_Tagged, _Indexed):
         _Indexed.__init__(self, index)
         self._actions = actions
 
+    def U(self, a):
+        pass
+
     @property
     def actions(self):
         """
@@ -201,22 +202,4 @@ class Game(ABC):
 
     def __init__(self, players):
         self.players = players
-
-    @abstractmethod
-    def U(self, p, a):
-        """ 
-        utility function for player p,
-        when all players play according to joint action a
-
-        Args:
-            p (Player): which player to calculate payoff
-            a (set(Action)): joint action enacted by all of the players
-
-        Raises:
-            ValueError: if player p is not in the set of Players
-
-        Returns:
-            (obj): payoff object that should satisfy all of the von Neumann and Morgenstern axioms
-        """
-        if p not in self._players:
-            raise LookupError('given player is not in the player set')
+        self.state = state

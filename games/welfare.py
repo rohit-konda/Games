@@ -7,10 +7,11 @@ Defines welfare games, i.e. games that have a welfare function
 that is dependent on player strategies
 """
 
-from games.basic import Game, FiniteGame
+from
+from games.noncoop import NonCoopGame
 
 
-class WelfareGame(Game):
+class WelfareGame(NonCoopGame):
     """
     Class definition for a welfare game, endowed with a welfare function
 
@@ -18,11 +19,13 @@ class WelfareGame(Game):
         players (list(str)): list defining a string label for each player i.
         actions (list(obj)): list of action sets A_i for each player i.
     """
-    def __init__(self, players, actions):
-        Game.__init__(self, players, actions, payoffs)
+    def __init__(self, players, welfare=None):
+        NonCoopGame.__init__(self, players)
+        self._welfare = welfare
 
     def welfare(self, a):
-        """ welfare function when all players play according to action a
+        """
+        welfare function when all players play according to action a
 
         Args:
             a (list(int)): list of which actions that each player plays
@@ -30,7 +33,14 @@ class WelfareGame(Game):
         Returns:
             (obj): social welfare value
         """
-        raise NotImplementedError
+        if self._welfare:
+            try:
+                val = self._welfare(a)
+            except Exception as e:
+                raise e
+            return val
+        else:
+            raise NotImplementedError('self._welfare was not set')
 
 
 class PotentialGame(WelfareGame):

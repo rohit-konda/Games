@@ -3,10 +3,10 @@
 Zero Sum Game class definitions 
 """
 
-from Games.basic import *
+from games.noncoop import *
 
 class ZeroSumGame(FromPayoffGame):
-    """ zero sum game wituh two players"""
+    """ zero sum game with two players"""
     def __init__(self, payoff):
         payoffs = [-payoff, payoff]  # 1st player minimizes, 2nd player maximizes
         FromPayoffGame.__init__(self, payoffs)

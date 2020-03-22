@@ -13,20 +13,53 @@ from abc import ABC, abstractmethod
 from collections.abc import Set
 
 
-class Ac:
+
+class _Indexed:
     """
-    Abstract class for action.
+    Class for objects that are indexed in a set or a list
 
     Attributes:
-        tag (str): string label for the action.
+        index (tuple): index of object
     """
+    def __init__(self, index):
+        self._index = index
 
+    @property
+    def index(self):
+        """
+        getter method for self._index
+
+        Returns:
+            (str): self._index
+        """
+        return self._index
+
+    @index.setter
+    def index(self, val):
+        """
+        setter method for self._index
+
+        Args:
+            val (str): string label
+        """
+        self._index = val
+
+
+class _Tagged:
+    """
+    Class for objects that are tagged with an ID
+
+    Attributes:
+        tag (str): ID of the object
+    """
     def __init__(self, tag):
         self._tag = tag
 
+
     @property
     def tag(self):
-        """ getter method for self._tag
+        """
+        getter method for self._tag
 
         Returns:
             (str): self._tag 
@@ -35,12 +68,25 @@ class Ac:
 
     @tag.setter
     def tag(self, val):
-        """ setter method for self._tag
+        """
+        setter method for self._tag
 
         Args:
             val (str): string label
         """
         self._tag = val
+
+
+class Action(_Tagged, _Indexed):
+    """
+    Abstract class for action.
+
+    Attributes:
+        name (str): the name of the player.
+    """
+    def __init__(self, tag, index):
+        _Tagged.__init__(self, tag)
+        _Indexed.__init__(self, index)
 
     def __repr__(self):
         """
@@ -52,64 +98,39 @@ class Ac:
         return self._tag
 
 
-class Action:
-    """
-    Abstract class for a joint action.
-
-    Attributes:
-        _players (PSet): the set of players.
-    """
-    
-    def __init__(self, players):
-        self._players = players
-
-    @abstractmethod
-    def __getitem__(self, p):
-        """ gives action played by player p
-
-        Args:
-            p (Player): which player.
-
-        Raises:
-            ValueError: if player p is not in Pset
-
-        Returns:
-            (Ac): action enacted by player p
-        """
-        if p not in self._players:
-            raise LookupError('given player is not in the player set')
-
-
-class Player:
+class Player(_Tagged, _Indexed):
     """
     Abstract class for a player.
 
     Attributes:
         name (str): the name of the player.
-        _actions (AcSet): the set of the actions available.
+        _actions (set(Act)): the set of the actions available.
     """
 
-    def __init__(self, name, actions):
-        self._name = name
+    def __init__(self, tag, index, actions):
+        _Tagged.__init__(self, tag)
+        _Indexed.__init__(self, index)
         self._actions = actions
 
     @property
     def actions(self):
-        """ getter method for self._actions
+        """
+        getter method for self._actions
 
         Returns:
-            (str): self._tag 
+            (str): self._actions
         """
-        return self._tag
+        return self._actions
 
-    @tag.setter
+    @actions.setter
     def actions(self, val):
-        """ setter method for self._actions
+        """
+        setter method for self._actions
 
         Args:
-            val (AcSet): string label
+            val (set(Action)): set of Action objects
         """
-        self._actions = val
+        self._actions = actions
 
     def __repr__(self):
         """
@@ -121,49 +142,52 @@ class Player:
         return "{} : {}".format(self._name, self._actions)
 
 
-class PSet(Set):
-    """
-    Abstract class for a set of players.
-    Extends the Set Class in collections.
-    """
-
-    def __init__(self):
-        pass
-
-
-class AcSet(Set):
-    """
-    Abstract class for a set of actions.
-    Extends the Set Class in collections.
-    """
-
-    def __init__(self):
-        pass
-
-
 class Eq:
     """
     Abstract class for an Equilibrium - Nash or otherwise.
     """
-    
-    def __init__(self):
+    pass
+
+
+class NashEq(Eq):
+    pass
+
+
+class GameFactory(ABC):
+    """
+    Abstract class for game construction, used for correct construction
+    of game objects
+    """
+
+    @abstractmethod
+    def make_game(self, *args):
+        """
+        constructor for a game
+
+        Args:
+            *args (list): generic list of arguments to generate a game
+
+        Raises:
+            ValueError: if there is an error in construction
+
+        Returns:
+            (Game): A valid game construction
+        """
+        self._check_game(*args)
+        return Game(*args)
+
+    @abstractmethod
+    def _check_game(self, *args):
+        """
+        check if game construction is valid
+
+        Args:
+            *args (list): generic list of arguments to generate a game
+
+        Raises:
+            ValueError: if game not valid.
+        """
         pass
-
-
-class Pay:
-    """
-    Abstract class for a payoff.
-    Should follow the Von Neumann and
-    Morgenstern axioms for utility.
-
-    Attributes:
-        _value: value of the payoff
-    """
-
-    def __new__(cls, value):
-        i = object.__new__(cls)
-        i._value = value
-        return i
 
 
 class Game(ABC):
@@ -172,36 +196,27 @@ class Game(ABC):
     Parent class for all other game constructions.
 
     Attributes:
-        players (Players): list defining a string label for each player i.
+        players (set(Player)): An abstract set of Player Objects
     """
 
     def __init__(self, players):
         self.players = players
-        self._check_game()
-
-    @abstractmethod
-    def _check_game(self):
-        """ check if game construction is valid
-
-        Raises:
-            ValueError: if game not valid.
-        """
-        pass
 
     @abstractmethod
     def U(self, p, a):
-        """ utility function for player p,
+        """ 
+        utility function for player p,
         when all players play according to joint action a
 
         Args:
             p (Player): which player to calculate payoff
-            a (Action): Joint action
+            a (set(Action)): joint action enacted by all of the players
 
         Raises:
-            ValueError: if player p is not in Pset
+            ValueError: if player p is not in the set of Players
 
         Returns:
-            (Payoff): payoff 
+            (obj): payoff object that should satisfy all of the von Neumann and Morgenstern axioms
         """
         if p not in self._players:
             raise LookupError('given player is not in the player set')

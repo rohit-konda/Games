@@ -144,7 +144,7 @@ class Player(_Tagged, _Indexed):
 
 class Eq:
     """
-    Abstract class for an Equilibrium - Nash or otherwise.
+    Abstract class for an Equilibrium.
     """
     pass
 

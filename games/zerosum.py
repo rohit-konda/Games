@@ -1,17 +1,8 @@
-#!/usr/bin/env python
-"""
-Zero Sum Game class definitions 
-"""
+    
 
-from games.noncoop import *
 
-class ZeroSumGame(FromPayoffGame):
-    """ zero sum game with two players"""
-    def __init__(self, payoff):
-        payoffs = [-payoff, payoff]  # 1st player minimizes, 2nd player maximizes
-        FromPayoffGame.__init__(self, payoffs)
-        self.psec = None  # define pure security policies dictionaries (V_underbar, p1_index), (V_overbar, p2_index)
-        self.msec = None  # define mixed security policies dictionary (V_m, p1_policy, p2_policy)
+
+
 
     def set_sec(self):
         """ set pure security values and policies """

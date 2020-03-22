@@ -5,7 +5,7 @@ Author : Rohit Konda
 
 Helper functions
 """
-
+from itertools import chain
 
 def powerset(iterable):
     """ returns the powerset of an iterable object (as a list of tuples)"""

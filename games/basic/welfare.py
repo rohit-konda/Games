@@ -100,8 +100,9 @@ class FiniteWelfareGame(FiniteGame, WelfareGame):
 
         self.opt = np.unravel_index(np.argmax(self.welfare), self.welfare.shape)
 
-    def set_poa_pos(self):
-        """ calculate price of anarchy from all pure nash and social optimum
+    def set_poas(self):
+        """ calculate price of anarchy and price of stability
+        from all pure nash and social optimum
 
         Note:
             setter method for self.poa & self.pos

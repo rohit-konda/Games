@@ -12,6 +12,12 @@ Summary:
 from abc import ABC, abstractmethod
 
 
+
+class Actions:
+
+    def __callable__()
+
+
 class _Indexed:
     """
     Class for objects that are indexed in a set or a list

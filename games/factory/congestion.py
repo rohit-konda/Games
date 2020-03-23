@@ -1,3 +1,11 @@
+
+
+class CongestionFactory(GFactory):
+	def _make_players()
+
+
+
+
 def U_i(self, i, strategy):
     """ utility for the strategy for player i """
     strategy_i = list(strategy[i])

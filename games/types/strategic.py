@@ -1,11 +1,10 @@
-from games.defn.game import Board, Game
-from games.defn.players import FActions, Player
-from games.defn.factory import GFactory
+from games.types.game import Board, Game
+from games.types.players import FActions, Player
+from games.types.factory import GFactory
 
 
 class SGFactory(GFactory):
     def make_game(cls, payoffs):
-        cls.payoffs = payoffs
         cls._check_game(*payoffs)
         board = cls._make_board()
         players = [cls._make_player(i, pay) for i, pay in enumerate(payoffs)]

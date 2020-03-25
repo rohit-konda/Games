@@ -3,8 +3,6 @@ class Actions:
         pass
 
 
-
-
 class FActions(Actions):
     def __init__(self, name, actions):
         self.name = name
@@ -21,7 +19,7 @@ class FActions(Actions):
         return len(self.actions)
 
 
-class Player(_Tagged, _Indexed):
+class Player:
     def __init__(self, name, index, actions, util):
         self.name = name
         self.index = index
@@ -29,7 +27,7 @@ class Player(_Tagged, _Indexed):
         self._util = util
 
     def U(self, play, board):
-        self._util(play, board)
+        return self._util(play, board)
 
     def move(self, play, board):
-        self.actions.move(play[self.index], board)
+        self.actions(play[self.index], board)

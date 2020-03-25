@@ -1,4 +1,4 @@
-from games.defn.players import *
+from games.types.players import *
 
 class Board:
     def __init__(self, state):
@@ -25,7 +25,7 @@ class WelfareGame(Game):
         self._welfare = welfare
 
     def welfare(self, board, play):
-        self._welfare(board, play)
+        return self._welfare(board, play)
 
 
 class PotentialGame(WelfareGame):
@@ -37,5 +37,5 @@ class PotentialGame(WelfareGame):
         self._potential = potential
 
     def potential(self, board, play):
-        self._potential(board, play)
+        return self._potential(board, play)
 

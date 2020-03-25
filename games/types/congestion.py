@@ -1,7 +1,22 @@
 
 
 class CongestionFactory(GFactory):
-	def _make_players()
+	
+	def make_game(cls, F, W):
+	    cls._check_game(*payoffs)
+	    board = cls._make_board()
+	    players = [cls._make_player(i, pay) for i, pay in enumerate(payoffs)]
+	    return Game(players, board)
+
+    def _make_player(cls, ind):
+		pass
+
+    def _make_board(cls):
+        return Board(None)
+
+    def _check_game(cls):
+		pass
+
 
 
 

@@ -1,5 +1,5 @@
 from games.types.players import *
-import warnings
+from warnings import warn
 
 class Board:
     def __init__(self, state):
@@ -16,28 +16,32 @@ class Game:
         self._N = len(players)
 
     def move(self, play):
-        [p.move(play, self.board) for p in self.players]
+        [p.move(play, self.board) for p in self._players]
         self.board.move(play)
 
     def U_i(self, i, play):
-        return self.players[i].U(play, self.board)
+        return self._players[i].U(play, self.board)
+
+    def actions(self):
+        return [p.actions for p in self._players]
 
     @property
     def players(self):
-        return self._players
+        return [str(p) for p in self._players]
 
     @players.setter
     def players(self, players):
-        warnings.warn('Changing the players may produce an error in the game. Create a new game instead.')
+        warn('Changing the players may produce an error in the game. Create a new game instead.')
         self._players = players
+        self._N = len(players)
 
     @property
     def board(self):
-        return self._board
+        return str(self._board)
 
     @board.setter
     def board(self, board):
-        warnings.warn('Changing the board may produce an error in the game. Create a new game instead.')
+        warn('Changing the board may produce an error in the game. Create a new game instead.')
         self._board = board
 
     @property
@@ -58,8 +62,8 @@ class WelfareGame(Game):
         Game.__init__(self, players, board)
         self._welfare = welfare
 
-    def welfare(self, board, play):
-        return self._welfare(board, play)
+    def welfare(self, play, board):
+        return self._welfare(play, board)
 
 
 class PotentialGame(WelfareGame):
@@ -70,5 +74,5 @@ class PotentialGame(WelfareGame):
             WelfareGame.__init__(self, players, board, welfare)
         self._potential = potential
 
-    def potential(self, board, play):
-        return self._potential(board, play)
+    def potential(self, play, board):
+        return self._potential(play, board)

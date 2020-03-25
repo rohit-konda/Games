@@ -1,15 +1,15 @@
 import numpy as np
 from itertools import product
-from games.types.game import Board, FiniteGame
+from games.types.game import Board, NCGame
 from games.types.players import FActions, Player
 from games.types.factory import GFactory
 
-
-class SGGame(NCGame):
-    def __init__(self, players, board):
-        NCGame.__init__(self, players, board)
-
 class SGFactory(GFactory):
+
+    class SGGame(NCGame):
+        def __init__(self, players, board):
+            NCGame.__init__(self, players, board)
+
     def make_game(cls, payoffs):
         cls._check_game(payoffs)
         board = cls._make_board()
@@ -35,19 +35,3 @@ class SGFactory(GFactory):
             raise ValueError('Each element in payoffs must be a numpy array.')
         if not all([np.shape(pay) == np.shape(payoffs[0]) for pay in payoffs]): 
             raise ValueError('Payoff arrays must be of the same shape.')
-
-
-def game_to_payoffs(game):
-    if not isinstance(game, NCGame):
-        raise ValueError('game must be of type NCGame')
-
-    num_act = [len(p.actions) for p in game.players]
-    payoffs = [None]*game.N
-    for i, player in enumerate(game.players):
-        payoff_i = np.zeros(num_act)
-        # generate all possible types of action indices
-        for a in product(*[range(n_i) for n_i in num_act]):
-            play = [game.players[i].actions[j] for i, j in enumerate(a)]
-            payoff_i[a] = game.U_i(i, play)
-        payoffs[i] = payoff_i
-    return payoffs

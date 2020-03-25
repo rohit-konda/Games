@@ -1,13 +1,33 @@
-    def lp_solver(self, c, G, h, A=None, b=None):
-        """ function for solving the relevant optimization program"""
-        if self.solver == 'cvxopt':
+from warnings import warn
+
+def lp(solver, c, G, h, A=None, b=None)
+    wrapper = SolverWrapper(solver, 'lp')
+    return wrapper.lp(c, G, h, A, b)
+
+
+class SolverWrapper:
+    _supported = ['cvxopt']
+
+    def __init__(self, solver, program):
+        self.solver = solver
+        self.program = program
+        self.check_solver()
+    
+    def lp(cls, c, G, h, A, b):
+        if solver == 'cvxopt':
             c = matrix(c)
             G = matrix(G)
             h = matrix(h)
             A = matrix(A) if A is not None else None
             b = matrix(b) if b is not None else None
-            self.sol = lp(c, G, h, A, b)
-            if self.sol['status'] != 'optimal':
-                raise ValueError('no feasible solution found')
+            sol = lp(c, G, h, A, b)
+            if sol['status'] != 'optimal':
+                warn('no feasible solution found')
+            return:
+                sol
+
+    def check_solver(self, solver):
+        if self.solver == 'cvxopt':
+            pass
         else:
-            raise ValueError('indicated a invalid solver name for self.solver')
+            pass

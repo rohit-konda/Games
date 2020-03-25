@@ -7,12 +7,12 @@ class DomEq(Eq):
 		self.play = play
 
 
-class NashEq(Eq):
+class PureEq(Eq):
     def __init__(self, play):
         self.play = play
 
 
-class MixedNashEq(Eq):
+class MixedEq(Eq):
 	pass
 
 
@@ -20,5 +20,4 @@ class CorrelatedEq(Eq):
 	pass
 
 
-class CoarseCorrelated(Eq):
-	pass
+class CoarseEq(Eq):

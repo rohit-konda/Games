@@ -1,3 +1,5 @@
+import warnings
+
 class Actions:
     def __call__(self, action, board):
         pass
@@ -5,7 +7,7 @@ class Actions:
 
 class FActions(Actions):
     def __init__(self, name, actions):
-        self.name = name
+        self._name = name
         self.actions = actions
 
     def __call__(self, action, board):
@@ -14,6 +16,21 @@ class FActions(Actions):
         except IndexError:
             raise IndexError('Player {} does not have this action available'.format(self.name))
         return ac
+
+    def __getitem__(self, item):
+        return self.actions.__getitem__(item)
+
+    def __iter__(self):
+        return self.actions.__iter__()
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        warnings.warn('Changing name, this should match the corresonding player.')
+        self._name = name
 
     def __len__(self):
         return len(self.actions)

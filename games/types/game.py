@@ -1,4 +1,5 @@
 from games.types.players import *
+import warnings
 
 class Board:
     def __init__(self, state):
@@ -10,13 +11,46 @@ class Board:
 
 class Game:
     def __init__(self, players, board):
-        self.players = sort(players, key=lambda x : x.index)
-        self.board = board
-        self.N = len(players)
+        self._players = sorted(players, key=lambda x : x.index)
+        self._board = board
+        self._N = len(players)
 
     def move(self, play):
-        [p.move(self.board, play) for p in players]
-        self.board.move()
+        [p.move(play, self.board) for p in self.players]
+        self.board.move(play)
+
+    def U_i(self, i, play):
+        return self.players[i].U(play, self.board)
+
+    @property
+    def players(self):
+        return self._players
+
+    @players.setter
+    def players(self, players):
+        warnings.warn('Changing the players may produce an error in the game. Create a new game instead.')
+        self._players = players
+
+    @property
+    def board(self):
+        return self._board
+
+    @board.setter
+    def board(self, board):
+        warnings.warn('Changing the board may produce an error in the game. Create a new game instead.')
+        self._board = board
+
+    @property
+    def N(self):
+        return self._N
+
+    @N.setter
+    def N(self, N):
+        raise ValueError('N should match the number of players')
+
+class NCGame(Game):
+    def __init__(self, players, board):
+        Game.__init__(self, players, board)
 
 
 class WelfareGame(Game):
@@ -38,4 +72,3 @@ class PotentialGame(WelfareGame):
 
     def potential(self, board, play):
         return self._potential(board, play)
-

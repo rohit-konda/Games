@@ -19,7 +19,6 @@ def player_cover(self, strategies):
     return [[j for j in range(self.n) if i in strategies[j]] for i in range(self.r_m)]
 
 def set_s_payoff(self):
-    self.set_dependency(['st_dict'])
     sp_dict = {}
     for k, v in self.st_dict.items():
         p_cover = self.player_cover(v)

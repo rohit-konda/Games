@@ -7,14 +7,19 @@ class SGFactory_Test(ut.TestCase):
 	def setUp(self):
 		self.fact = SGFactory()
 		self.pay1 = [np.array([[2, 0], [3, 1]]), np.array([[2, 3], [0, 1]])]
+		self.game = self.fact.make_game(self.pay1)
 
 	def test_make_board(self):
-		board = self.fact._make_board()
-		self.assertTrue(board.state is None)
-		
+		self.assertisNone(self.game.board.state)
+
+	def test_make_players(self):
+		pass
+
+	def test_check_game(self):
+		pass
 
 	def test_make_game(self):
-		pd = self.fact.make_game(self.pay1)
+		pd = None 
 
 
 if __name__ == '__main__':

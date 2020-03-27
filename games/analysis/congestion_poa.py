@@ -1,12 +1,11 @@
+def get_poa(game):
+    pass
+
+def get_poa(f, w):
+    pass
+
 
 class CongestionPoA:
-
-    def get_poa(game):
-        pass
-
-    def get_poa(f, w):
-        pass
-
     def I(cls, n):
         ind = []
         for i in range(1, n+1):

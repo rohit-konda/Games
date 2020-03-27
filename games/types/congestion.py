@@ -59,12 +59,14 @@ class CongestionFactory(GFactory):
 
 
 
+class CongPlayer(Player):
+    def __init__(self, name)
+        Player.__init__(self, )
 
 
-
-    def player_cover(self, strategies):
+    def player_cover(self, play):
         """ returns list of which players are covering the resource """
-        return [[j for j in range(self.n) if i in strategies[j]] for i in range(self.r_m)]
+        return [[j for j in range(self.n) if i in play[j]] for i in range(self.r_m)]
 
 
 

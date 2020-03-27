@@ -35,6 +35,9 @@ class FActions(Actions):
     def __len__(self):
         return len(self.actions)
 
+    def __repr__(self):
+        return str(self.actions)[1:-1]
+
 
 class Player:
     def __init__(self, name, index, actions, util):
@@ -48,3 +51,6 @@ class Player:
 
     def move(self, play, board):
         self.actions(play[self.index], board)
+
+    def __repr__(self):
+        return '{} : player {} \n  actions : {}'.format(self.name, self.index, self.actions)

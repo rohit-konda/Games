@@ -8,6 +8,9 @@ class Board:
     def move(self, play):
         pass
 
+    def __repr__(self):
+        return str(self.state)
+
 
 class Game:
     def __init__(self, players, board):
@@ -27,7 +30,7 @@ class Game:
 
     @property
     def players(self):
-        return [str(p) for p in self._players]
+        return [str(p.name) for p in self._players]
 
     @players.setter
     def players(self, players):
@@ -52,9 +55,17 @@ class Game:
     def N(self, N):
         raise ValueError('N should match the number of players')
 
+    def __repr__(self):
+        rep = 'Game with \nstate : \n{} \nand {} players:'.format(self.board, self.N)
+        return rep + ''.join(['\n' + str(p) for p in self._players])
+
 class NCGame(Game):
-    def __init__(self, players, board):
-        Game.__init__(self, players, board)
+    def __init__(self, players):
+        Game.__init__(self, players, Board(None))
+
+    def __repr__(self):
+        rep = 'Game with {} players:'.format(self.N)
+        return rep + ''.join(['\n' + str(p) for p in self._players])
 
 
 class WelfareGame(Game):

@@ -1,5 +1,4 @@
 from games.types.players import *
-from warnings import warn
 
 class Board:
     def __init__(self, state):
@@ -14,38 +13,65 @@ class Board:
 
 class Game:
     def __init__(self, players, board):
-        self._players = sorted(players, key=lambda x : x.index)
+        self._players = players
         self._board = board
         self._N = len(players)
+        self._check()
+
+    def _check(self):
+        try:
+            iter(self._players)
+            if len(self._players) == 0:
+                raise ValueError('Player list is empty.')
+        except TypeError:
+            raise TypeError('self.players must be iterable.')
+        if not isinstance(self._board, Board):
+            raise TypeError('Board must be of type games.types.Board.')
+        if not all([isinstance(p, Player) for p in self._players]):
+            raise TypeError('Players must contain players of type games.types.players.Player.')
+
+        self._players = sorted(self._players, key=lambda x : x.index)
+        if [p.index for p in self._players] != [i for i in range(self._N)]:
+            raise ValueError('Player\'s indices must be from 0 to the number of players')
+
+
 
     def move(self, play):
-        [p.move(play, self.board) for p in self._players]
-        self.board.move(play)
+        [p.move(play, self._board) for p in self._players]
+        self._board.move(play)
 
     def U_i(self, i, play):
-        return self._players[i].U(play, self.board)
+        all_play = [p.actions(play[p.index], self._board) for p in self._players]
+        return self._players[i].U(all_play, self._board)
 
-    def actions(self):
-        return [p.actions for p in self._players]
+    def get_actions(self):
+        return [str(p.actions) for p in self._players]
+
+    def get_players(self):
+        return [p.name for p in self._players]
+
+    def get_board(self):
+        return str(self._board)
+
+    def __repr__(self):
+        rep = 'Game with \nstate : \n{} \nand {} players:'.format(self._board, self._N)
+        return rep + ''.join(['\n' + str(p) for p in self._players])
 
     @property
     def players(self):
-        return [str(p.name) for p in self._players]
+        return self._players
 
     @players.setter
     def players(self, players):
-        warn('Changing the players may produce an error in the game. Create a new game instead.')
-        self._players = players
-        self._N = len(players)
+        raise ValueError('Can\'t change the players in the game. Create a new game instead.')
 
     @property
     def board(self):
-        return str(self._board)
+        return self._board
 
     @board.setter
     def board(self, board):
-        warn('Changing the board may produce an error in the game. Create a new game instead.')
-        self._board = board
+        raise ValueError('Can\'t change the board in the game. Create a new game instead.')
 
     @property
     def N(self):
@@ -55,16 +81,12 @@ class Game:
     def N(self, N):
         raise ValueError('N should match the number of players')
 
-    def __repr__(self):
-        rep = 'Game with \nstate : \n{} \nand {} players:'.format(self.board, self.N)
-        return rep + ''.join(['\n' + str(p) for p in self._players])
-
 class NCGame(Game):
     def __init__(self, players):
         Game.__init__(self, players, Board(None))
 
     def __repr__(self):
-        rep = 'Game with {} players:'.format(self.N)
+        rep = 'Game with {} players:'.format(self._N)
         return rep + ''.join(['\n' + str(p) for p in self._players])
 
 

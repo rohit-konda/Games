@@ -13,7 +13,7 @@ class SGFactory_Test(ut.TestCase):
 		self.assertIsNone(self.game._board.state)
 
 	def test_players(self):
-		players = self.game._players
+		players = self.game.players
 		self.assertEqual([p.name for p in players], ['0', '1'])
 		self.assertEqual([a for p in players for a in p.actions], [0, 1, 0, 1])
 		for i in [0, 1]:

@@ -14,6 +14,17 @@ class TestPlayers(ut.TestCase):
 		self.assertEqual(player.U(play, board), 0)
 		self.assertIsNone(player.move(play, board))
 
+		def wrongaction(): Player(name, index, None, util)
+		self.assertRaises(TypeError, wrongaction)
+
+		def changename(): player.name = None
+		def changeaction(): player.actions = None
+		def changeindex(): player.index = None
+		def changeutil(): player.util = None
+		self.assertRaises(ValueError, changename)
+		self.assertRaises(ValueError, changeaction)
+		self.assertRaises(ValueError, changeindex)
+		self.assertRaises(ValueError, changeutil)
 
 class TestFActions(ut.TestCase):
 	def test_FActions(self):
@@ -26,8 +37,8 @@ class TestFActions(ut.TestCase):
 		self.assertEqual(fact.name, 'p1')
 		self.assertEqual(len(fact), 2)
 
-		def testequaler(name): fact.name = name
-		self.assertWarns(Warning, testequaler, 'p2')
+		def testequaler(): fact.name = None
+		self.assertRaises(ValueError, testequaler)
 		self.assertRaises(IndexError, fact, 2, None)
 
 if __name__ == '__main__':

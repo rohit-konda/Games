@@ -1,5 +1,3 @@
-import warnings
-
 class Actions:
     def __call__(self, action, board):
         pass
@@ -9,6 +7,7 @@ class FActions(Actions):
     def __init__(self, name, actions):
         self._name = name
         self.actions = actions
+
 
     def __call__(self, action, board):
         try:
@@ -29,8 +28,7 @@ class FActions(Actions):
 
     @name.setter
     def name(self, name):
-        warnings.warn('Changing name, this should match the corresonding player.')
-        self._name = name
+        raise ValueError('Name shouldn\'t change, define a new FActions instead.')
 
     def __len__(self):
         return len(self.actions)
@@ -41,16 +39,52 @@ class FActions(Actions):
 
 class Player:
     def __init__(self, name, index, actions, util):
-        self.name = name
-        self.index = index
-        self.actions = actions
+        self._name = name
+        self._index = index
+        if isinstance(actions, Actions):
+            self._actions = actions
+        else:
+            raise TypeError('actions must be of type Actions')
         self._util = util
 
     def U(self, play, board):
         return self._util(play, board)
 
     def move(self, play, board):
-        self.actions(play[self.index], board)
+        pass
 
     def __repr__(self):
         return '{} : player {} \n  actions : {}'.format(self.name, self.index, self.actions)
+
+    @property
+    def actions(self):
+        return self._actions
+
+    @actions.setter
+    def actions(self, actions):
+        raise ValueError('Actions shouldn\'t change, define a new player instead.')
+
+    @property
+    def util(self):
+        return self.U
+
+    @util.setter
+    def util(self, util):
+        raise ValueError('Utility function shouldn\'t change, define a new player instead.')
+
+    @property
+    def index(self):
+        return self._index
+
+    @index.setter
+    def index(self, index):
+        raise ValueError('Index shouldn\'t change, define a new player instead.')
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        raise ValueError('Name shouldn\'t change, define a new player instead.')
+

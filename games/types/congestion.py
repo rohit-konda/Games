@@ -9,21 +9,24 @@ class CongestionFactory(GFactory):
         def __init__(self, players, board, r_m):
             NCGame.__init__(self, players, board)
             self.r_m = r_m
-	
-	def make_game(cls, F, W, ):
-	    cls._check_game(F, W)
-	    board = cls._make_board()
-	    players = [cls._make_player(i)]
-	    return Game(players, board)
+
+    class CongestionPlayer(Player):
+        pass
+    
+    def make_game(cls, F, W):
+        cls._check_game(F, W)
+        board = cls._make_board()
+        players = [cls._make_player(i)]
+        return Game(players, board)
 
     def _make_player(cls, ind):
-		pass
+        pass
 
     def _make_board(cls):
         return Board(None)
 
     def _check_game(cls):
-		if not (isinstance(F, np.ndarray) and isinstance(W, np.ndarray)):
+        if not (isinstance(F, np.ndarray) and isinstance(W, np.ndarray)):
             raise TypeError('Each element in payoffs must be a numpy array.')
 
 
@@ -60,7 +63,7 @@ class CongestionFactory(GFactory):
 
 
 class CongPlayer(Player):
-    def __init__(self, name)
+    def __init__(self, name):
         Player.__init__(self, )
 
 

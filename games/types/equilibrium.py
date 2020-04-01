@@ -21,3 +21,4 @@ class CorrelatedEq(Eq):
 
 
 class CoarseEq(Eq):
+	pass

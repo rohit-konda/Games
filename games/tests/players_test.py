@@ -9,7 +9,7 @@ class TestPlayers(ut.TestCase):
 		actions = Actions()
 		def util(play, board):
 			return play[0]
-		player = Player(name, index, actions, util)
+		player = FluidPlayer(name, index, actions, util)
 		play, board = [0], None
 		self.assertEqual(player.U(play, board), 0)
 		self.assertIsNone(player.move(play, board))

@@ -1,6 +1,6 @@
 from warnings import warn
 
-def lp(solver, c, G, h, A=None, b=None)
+def lp(solver, c, G, h, A=None, b=None):
     wrapper = SolverWrapper(solver, 'lp')
     return wrapper.lp(c, G, h, A, b)
 
@@ -11,10 +11,11 @@ class SolverWrapper:
     def __init__(self, solver, program):
         self.solver = solver
         self.program = program
-        self.check_solver()
+        self.check_solver(solver)
     
     def lp(cls, c, G, h, A, b):
         if solver == 'cvxopt':
+            from cvxopt.solvers import lp
             c = matrix(c)
             G = matrix(G)
             h = matrix(h)
@@ -23,11 +24,11 @@ class SolverWrapper:
             sol = lp(c, G, h, A, b)
             if sol['status'] != 'optimal':
                 warn('no feasible solution found')
-            return:
-                sol
+            else:
+                return sol
 
     def check_solver(self, solver):
         if self.solver == 'cvxopt':
-            pass
+            from cvxopt import matrix
         else:
             pass

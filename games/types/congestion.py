@@ -1,29 +1,72 @@
 import numpy as np
-from games.types.game import Board, NCGame
+from games.types.game import Board, NCGame, PotentialGame
 from games.types.players import FActions, Player
 from games.types.factory import GFactory
 
+class ResGame(NCGame, PotentialGame):
+    def __init__(self, players, board, r_m, w_r):
+        NCGame.__init__(self, players, board)
+        PotentialGame.__init__(players, board, self._potential)
+        self.r_m = r_m
+        self.w_r = r_m
+
+    def _potential(self, play):
+        self.w_r(self, res, players)
+
+class ResPlayer(Player):
+    def __init__(self, name, index, actions, f_r):
+        Player.__init__(self, name, index, actions)
+
+    def U(self, play, board):
+        player_cover = self.player_cover(play)
+
+
+    def player_cover(self, play):
+        return [(res, [i if res in play[i] for i in range(len(play))]) for res in play[self.index]]
+
+
+class CongGame(ResGame):
+    def __init__(self, players, board, r_m, w_r):
+        NCGame.__init__(self, players, board)
+        PotentialGame.__init__(players, board, self._potential)
+        self.r_m = r_m
+        self.w_r = r_m
+
+    def potential(self, play):
+        self.w_r(self, res, players)
+
+class CongPlayer(ResPlayer):
+    def __init__(self, name, index, actions, f_r):
+        ResPlayer.__init__(self, name, index, actions)
+
+
+class DistResGame(CongGame):
+    def __init__(self, players, board, r_m, w_r):
+        NCGame.__init__(self, players, board)
+        PotentialGame.__init__(players, board, self._potential)
+        self.r_m = r_m
+        self.w_r = r_m
+
+    def potential(self, play):
+        self.w_r(self, res, players)
+
+class CongPlayer(ResPlayer):
+    def __init__(self, name, index, actions, f_r):
+        ResPlayer.__init__(self, name, index, actions)
+
+
+
 class CongestionFactory(GFactory):
-
-    class CongestionGame(NCGame):
-        def __init__(self, players, board, r_m):
-            NCGame.__init__(self, players, board)
-            self.r_m = r_m
-
-    class CongestionPlayer(Player):
-        pass
     
     def make_game(cls, F, W):
         cls._check_game(F, W)
         board = cls._make_board()
         players = [cls._make_player(i)]
-        return Game(players, board)
+        return CongestionGame(players, board)
 
     def _make_player(cls, ind):
         pass
 
-    def _make_board(cls):
-        return Board(None)
 
     def _check_game(cls):
         if not (isinstance(F, np.ndarray) and isinstance(W, np.ndarray)):
@@ -44,32 +87,12 @@ class CongestionFactory(GFactory):
         def util(play, Board):
             return payoff[tuple(play)]
         return Player(name, ind, actions, util)
-
-    def _make_board(cls):
-        return Board(None)
-
-    def _check_game(cls, payoffs):
-        try:
-            iter(payoffs)
-        except TypeError:
-            raise TypeError('Payoffs must be of type iterable.')
-        if not all([isinstance(pay, np.ndarray) for pay in payoffs]):
-            raise TypeError('Each element in payoffs must be a numpy array.')
-        if not all([np.shape(pay) == np.shape(payoffs[0]) for pay in payoffs]): 
-            raise ValueError('Payoff arrays must be of the same shape.')
+ 
 
 
 
 
 
-class CongPlayer(Player):
-    def __init__(self, name):
-        Player.__init__(self, )
-
-
-    def player_cover(self, play):
-        """ returns list of which players are covering the resource """
-        return [[j for j in range(self.n) if i in play[j]] for i in range(self.r_m)]
 
 
 

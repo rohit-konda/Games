@@ -11,6 +11,14 @@ class Board:
         return str(self.state)
 
 
+class RepeatBoard(Board):
+    def __init__(self):
+        Board.__init__(self, 0)
+
+    def move(self, play):
+        self.state += 1
+
+
 class Game:
     def __init__(self, players, board):
         self._players = players
@@ -33,8 +41,6 @@ class Game:
         self._players = sorted(self._players, key=lambda x : x.index)
         if [p.index for p in self._players] != [i for i in range(self._N)]:
             raise ValueError('Player\'s indices must be from 0 to the number of players')
-
-
 
     def move(self, play):
         [p.move(play, self._board) for p in self._players]
@@ -91,21 +97,19 @@ class NCGame(Game):
 
 
 class WelfareGame(Game):
-    def __init__(self, players, board, welfare):
+    def __init__(self, players, board):
         Game.__init__(self, players, board)
-        self._welfare = welfare
 
     def welfare(self, play, board):
-        return self._welfare(play, board)
+        raise NotImplementedError
 
 
 class PotentialGame(WelfareGame):
-    def __init__(self, players, board, potential, welfare=None):
-        if welfare is None:
-            WelfareGame.__init__(self, players, board, potential)
-        else:
-            WelfareGame.__init__(self, players, board, welfare)
-        self._potential = potential
+    def __init__(self, players, board):
+        WelfareGame.__init__(players, board)
 
     def potential(self, play, board):
-        return self._potential(play, board)
+        raise NotImplementedError
+
+    def welfare(self, play, board):
+        return self.potential(play, board)

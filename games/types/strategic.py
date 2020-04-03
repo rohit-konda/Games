@@ -4,19 +4,30 @@ from games.types.game import Board, NCGame
 from games.types.players import FActions, Player
 from games.types.factory import GFactory
 
+
+class SGGame(NCGame):
+    def __init__(self, players):
+        NCGame.__init__(self, players)
+
+    def __repr__(self):
+        return 'Strategic ' + NCGame.__repr__(self)
+
+
+class SGPlayer(Player):
+    def __init__(self, name, index, actions, payoff):
+        Player.__init__(self, name, index, actions)
+        self.payoff = payoff
+
+    def U(self, play, board):
+        return self.payoff[tuple(play)]
+
+
 class SGFactory(GFactory):
-
-    class SGGame(NCGame):
-        def __init__(self, players):
-            NCGame.__init__(self, players)
-
-        def __repr__(self):
-            return 'Strategic ' + NCGame.__repr__(self)
 
     def make_game(cls, payoffs):
         cls._check_game(payoffs)
         players = [cls._make_player(i, pay) for i, pay in enumerate(payoffs)]
-        return cls.SGGame(players)
+        return SGGame(players)
 
     def _make_board(cls):
         pass
@@ -24,9 +35,7 @@ class SGFactory(GFactory):
     def _make_player(cls, ind, payoff):
         name = str(ind)
         actions = FActions(name, [i for i in range(np.shape(payoff)[ind])])
-        def util(play, board):
-            return payoff[tuple(play)]
-        return Player(name, ind, actions, util)
+        return SGPlayer(name, ind, actions, payoff)
 
     def _check_game(cls, payoffs):
         try:

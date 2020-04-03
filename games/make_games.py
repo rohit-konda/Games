@@ -1,5 +1,5 @@
 from games.types.strategic import SGFactory
-from games.types.congestion import CongestionFactory
+#from games.types.congestion import CongestionFactory
 
 
 def payoff_game(payoffs):

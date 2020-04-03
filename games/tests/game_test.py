@@ -13,9 +13,9 @@ class Game_Test(ut.TestCase):
 			def move(self, play):
 			    self.state += 1
 
-		class PlayerMoving(Player):
+		class PlayerMoving(FluidPlayer):
 			def __init__(self, name, index, actions, util):
-				Player.__init__(self, name, index, actions, util)
+				FluidPlayer.__init__(self, name, index, actions, util)
 				self.hasMoved = False
 
 			def move(self, play, board):
@@ -61,8 +61,8 @@ class Game_Test(ut.TestCase):
 	def test_check(self):
 		def util(play, board):
 			return play[0]
-		players = [Player('0', 0, Actions(), util), Player('1', 1, Actions(), util)]
-		players2 = [Player('0', 0, Actions(), util), Player('1', 2, Actions(), util)]
+		players = [FluidPlayer('0', 0, Actions(), util), FluidPlayer('1', 1, Actions(), util)]
+		players2 = [FluidPlayer('0', 0, Actions(), util), FluidPlayer('1', 2, Actions(), util)]
 		def setnullgame(): Game(None, None)
 		def setnullboard(): Game(players, None)
 		def setnullplayers(): Game([], Board(None))

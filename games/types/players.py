@@ -38,17 +38,16 @@ class FActions(Actions):
 
 
 class Player:
-    def __init__(self, name, index, actions, util):
+    def __init__(self, name, index, actions):
         self._name = name
         self._index = index
         if isinstance(actions, Actions):
             self._actions = actions
         else:
             raise TypeError('actions must be of type Actions')
-        self._util = util
 
     def U(self, play, board):
-        return self._util(play, board)
+        raise NotImplementedError
 
     def move(self, play, board):
         pass
@@ -66,7 +65,7 @@ class Player:
 
     @property
     def util(self):
-        return self.U
+        return self._util
 
     @util.setter
     def util(self, util):
@@ -87,4 +86,14 @@ class Player:
     @name.setter
     def name(self, name):
         raise ValueError('Name shouldn\'t change, define a new player instead.')
+
+
+class FluidPlayer(Player):
+    def __init__(self, name, index, actions, util):
+        Player.__init__(self, name, index, actions)
+        self._util = util 
+
+    def U(self, play, board):
+        return self._util(play, board)
+
 

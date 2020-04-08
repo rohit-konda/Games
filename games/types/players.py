@@ -34,7 +34,7 @@ class FActions(Actions):
         return len(self.actions)
 
     def __repr__(self):
-        return str(self.actions)[1:-1]
+        return 'Actions({})'.format(str(self.actions)[1:-1])
 
 
 class Player:
@@ -52,8 +52,11 @@ class Player:
     def move(self, play, board):
         pass
 
+    def __str__(self):
+        return 'Player ' + self.name
+
     def __repr__(self):
-        return '{} : player {} \n  actions : {}'.format(self.name, self.index, self.actions)
+        return '{} : player {} with  actions : {}'.format(self.name, self.index, repr(self.actions))
 
     @property
     def actions(self):
@@ -88,7 +91,7 @@ class Player:
         raise ValueError('Name shouldn\'t change, define a new player instead.')
 
 
-class FluidPlayer(Player):
+class MutablePlayer(Player):
     def __init__(self, name, index, actions, util):
         Player.__init__(self, name, index, actions)
         self._util = util 

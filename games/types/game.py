@@ -7,8 +7,11 @@ class Board:
     def move(self, play):
         pass
 
-    def __repr__(self):
+    def __str__(self):
         return str(self.state)
+
+    def __repr__(self):
+        return repr(self.state)
 
 
 class RepeatBoard(Board):
@@ -24,6 +27,7 @@ class Game:
         self._players = players
         self._board = board
         self._N = len(players)
+        self.eq = []
         self._check()
 
     def _check(self):
@@ -50,18 +54,24 @@ class Game:
         all_play = [p.actions(play[p.index], self._board) for p in self._players]
         return self._players[i].U(all_play, self._board)
 
+    def actions(self):
+        return [p.actions for p in self._players]
+
     def get_actions(self):
         return [str(p.actions) for p in self._players]
 
     def get_players(self):
-        return [p.name for p in self._players]
+        return [str(p) for p in self._players]
 
     def get_board(self):
         return str(self._board)
 
+    def __str__(self):
+        return self.__name__ + '(state : {}, players: {}.)'.format(str(self._board), ' '.join(self.get_players()))
+
     def __repr__(self):
-        rep = 'Game with \nstate : \n{} \nand {} players:'.format(self._board, self._N)
-        return rep + ''.join(['\n' + str(p) for p in self._players])
+        rep = self.__name__ + 'with \nstate : \n{} \nand {} players:'.format(repr(self._board), self._N)
+        return rep + ''.join(['\n' + repr(p) for p in self._players])
 
     @property
     def players(self):
@@ -91,9 +101,8 @@ class NCGame(Game):
     def __init__(self, players):
         Game.__init__(self, players, Board(None))
 
-    def __repr__(self):
-        rep = 'Game with {} players:'.format(self._N)
-        return rep + ''.join(['\n' + str(p) for p in self._players])
+    def __str__(self):
+        return self.__name__ + '({} players)'.format(str(self._board), self._N)
 
 
 class WelfareGame(Game):
@@ -106,7 +115,7 @@ class WelfareGame(Game):
 
 class PotentialGame(WelfareGame):
     def __init__(self, players, board):
-        WelfareGame.__init__(players, board)
+        WelfareGame.__init__(self, players, board)
 
     def potential(self, play, board):
         raise NotImplementedError

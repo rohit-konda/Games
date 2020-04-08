@@ -43,8 +43,8 @@ class BruteNash:
 
 class BrutePoA:
     def game_to_welfare(cls, game):
-        if not isinstance(game, WelfareGame):
-            raise ValueError('game must be of type WelfareGame')
+        if not isinstance(game, WelfareGame) or not isinstance(game, NCGame):
+            raise ValueError('game must be of type WelfareGame and NCGame')
 
         num_act = [len(p.actions) for p in game.players]
         welfare = np.zeros(num_act)
@@ -56,8 +56,9 @@ class BrutePoA:
 
     def set_poas(cls, list_pureeq, welfare):
         pne_welfare = [welfare[pne.play] for pne in list_pureeq]
-        opt = welfare[cls.get_opt(welfare)]
+        opt = np.max(welfare)
         price_ratios = [float(pne)/opt for pne in pne_welfare]
         return min(price_ratios), max(price_ratios)
 
-    def get_opt(cls, welfare): return np.unravel_index(np.argmax(welfare), welfare.shape)
+    def get_argopt(cls, welfare): 
+        return np.unravel_index(np.argmax(welfare), welfare.shape)

@@ -1,6 +1,6 @@
-from itertools import combinations
+from itertools import combinations, product
 
-class CongestionPoA:
+class ResourcePoA:
     def I(cls, N):
         ind = []
         for i in range(1, N+1):
@@ -122,76 +122,74 @@ class CongestionPoA:
         return actions, values
 
 
-class ResourcePoA(CongestionPoA):
-    def primal_poa(self):     
+class CongestionPoA:
+
+    def primal_poa(cls, flist, w):     
         """ primal formulation for calculation of Price of Anarchy """
-        N = 4**self.n - 1
-        c = np.zeros((N,), dtype='float')
-        cons_1 = np.zeros((self.n, N), dtype='float')
-        A = np.zeros((1, N), dtype='float')
-        for i in range(len(self.partition)):
-            p = self.partition[i]
-            Na = [k for k in range(self.n) if p[k]==1]
-            Nx = [k for k in range(self.n) if p[k]==2]
-            Nb = [k for k in range(self.n) if p[k]==3]
+        def nash_func(j, Na, Nb, Nx):
+            """ define the nash constraint for the computable poa calculation """
+            if j in Na:
+                return flist[j](Na + Nx)
+            elif j in Nb:
+                return -flist[j](Na + Nx + [j])
+            else:
+                return 0
 
-            c[i] = -self.w_poa(Nb + Nx)
-            A[0, i] = self.w_poa(Na + Nx)
-            for j in range(self.n):
-                cons_1[j][i] = self.nash_poa(j, Na, Nb, Nx)
 
-        cons_2 = np.identity(N)
+        cls.check_welfare(w)
+        cls.check_f(flist)
+        
+        n = cls.n
+        n_c = 4**n - 1
+        partition = list(product([1, 2, 3, 4], repeat=n))[:-1]
+
+        c = np.zeros((n_c,), dtype='float')
+        cons_1 = np.zeros((n, n_c), dtype='float')
+        A = np.zeros((1, n_c), dtype='float')
+        for i, p in enumerate(partition):
+            Na = [k for k in range(n) if p[k]==1]
+            Nx = [k for k in range(n) if p[k]==2]
+            Nb = [k for k in range(n) if p[k]==3]
+
+            c[i] = -w(Nb + Nx)
+            A[0, i] = w(Na + Nx)
+            
+            for j in range(n):
+                cons_1[j][i] = nash_func(j, Na, Nb, Nx)
+
+        cons_2 = np.identity(n_c)
         G = -np.vstack((cons_1, cons_2))
-        h = np.zeros((N+self.n, 1))
+        h = np.zeros((n_c+n, 1))
         b = np.array([[1]], dtype='float')
         
-        self.lp_solver(c, G, h, A, b)
-        game = self.worst_case(np.array(self.sol['x']).flatten()) # worst case game instance
-        return -1./self.sol['primal objective'], game 
+        return c, G, h, A, b
 
-    def nash_poa(self, j, Na, Nb, Nx):
-        """ define the nash constraint for the computable poa calculation """
-        if j in Na:
-            return self.f_poa(j, Na + Nx)
-        elif j in Nb:
-            return -self.f_poa(j, Na + Nx + [j])
-        else:
-            return 0
-
-    def f_poa(self, i, players):
-        """ design distribution function """
+    def check_welfare(cls, w):
         pass
 
-    def w_poa(self, players):
-        """ welfare function """
+    def check_f(cls, flist):
         pass
 
-    def f_r(self, i, res, players):
-        """ function design for the utility function depends on what resource,
-        and what players are covering it """
-        return self.values[res] * self.f_poa(i, players)
 
-    def w_r(self, res, players):
-        """ welfare function, returns a scalar value dependent on the resource and which players select it """
-        return self.values[res] * self.w_poa(players)
-
-    def worst_case(self, theta):
+    def worst_case(cls, theta, N):
         """ get worst case instance """
-        players = [i for i in range(self.n)]
         values = []
-        strategies = [[(), ()] for _ in players]
+        actions = [[(), ()] for _ in range(N)]
+        partition = list(product([1, 2, 3, 4], repeat=n))[:-1]
+
         c = 0
-        for i in range(len(theta)):
-            val = round(theta[i], 7) # round theta to avoid ~0 value resources
+        for i, t in enumerate(theta):
+            val = round(t, 7) # round theta to avoid ~0 value resources
             if  val > 0:
                 values.append(val)
-                for j in range(self.n):
-                    if self.partition[i][j] == 1:
+                for j in range(N):
+                    if partition[i][j] == 1:
                         strategies[j][0] += (c,)
-                    elif self.partition[i][j] == 2:
+                    elif partition[i][j] == 2:
                         strategies[j][0] += (c,)
                         strategies[j][1] += (c,)
-                    elif self.partition[i][j] == 3:
+                    elif partition[i][j] == 3:
                         strategies[j][1] += (c,)
                 c += 1
-        return players, strategies, values, self.w, self.f
+
+        return values, actions

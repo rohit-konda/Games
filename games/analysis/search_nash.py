@@ -1,19 +1,21 @@
-
 import numpy as np
 from itertools import product
 from games.types.equilibrium import PureEq
-from games.types.game import NCGame
+from games.types.game import Game
 
 
 class BruteNash:
     TOLERANCE = 10**-8
 
-    def find_NCnash(cls, game):
-        return find_nash(game_to_payoffs(game))
+    def find_NCnash(cls, game, add=True):
+        eq = find_nash(game_to_payoffs(game))
+        if add:
+            game.eq += eq
+        return eq
 
     def game_to_payoffs(cls, game):
-        if not isinstance(game, NCGame):
-            raise ValueError('game must be of type NCGame')
+        if not isinstance(game, Game):
+            raise ValueError('inpur must be of type Game')
 
         num_act = [len(p.actions) for p in game.players]
         payoffs = [None]*game.N
@@ -21,7 +23,7 @@ class BruteNash:
             payoff_i = np.zeros(num_act)
             # generate all possible types of action indices
             for a in product(*[range(n_i) for n_i in num_act]):
-                play = [game.players[j].actions[k] for j, k in enumerate(a)]
+                play = [game.actions()[j][k] for j, k in enumerate(a)]
                 payoff_i[a] = game.U_i(i, play)
             payoffs[i] = payoff_i
         return payoffs
@@ -43,14 +45,15 @@ class BruteNash:
 
 class BrutePoA:
     def game_to_welfare(cls, game):
-        if not isinstance(game, WelfareGame) or not isinstance(game, NCGame):
-            raise ValueError('game must be of type WelfareGame and NCGame')
+        if not isinstance(game, WelfareGame):
+            raise ValueError('game must be of type WelfareGame')
 
-        num_act = [len(p.actions) for p in game.players]
+        actions = game.actions()
+        num_act = [len(ac) for ac in actions]
         welfare = np.zeros(num_act)
         # generate all possible types of action indices
         for a in product(*[range(n_i) for n_i in num_act]):
-            play = [game.players[i].actions[j] for i, j in enumerate(a)]
+            play = [actions[i][j] for i, j in enumerate(a)]
             welfare[a] = game.welfare(play)
         return welfare
 

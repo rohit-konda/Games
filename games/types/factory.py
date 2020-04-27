@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
 class GFactory(ABC):
-
     @abstractmethod
     def make_game(cls, *args):
         pass
@@ -11,9 +10,5 @@ class GFactory(ABC):
     	pass
 
     @abstractmethod
-    def _make_board(cls, *args):
-    	pass
-
-    @abstractmethod
-    def _check_game(cls, *args):
+    def _check_args(cls, *args):
         pass

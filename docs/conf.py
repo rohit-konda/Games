@@ -15,6 +15,10 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 
+# Add napoleon to the extensions list
+extensions = ['sphinx.ext.napoleon']
+
+
 # -- Project information -----------------------------------------------------
 
 project = 'Games'

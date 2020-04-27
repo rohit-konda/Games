@@ -1,24 +1,25 @@
-class Eq:
-    pass
-
+from games.types.game import Eq
 
 class DomEq(Eq):
 	def __init__(self, play):
-		self.play = play
+		Eq.__init__(self, play)
 
 
 class PureEq(Eq):
-    def __init__(self, play):
-        self.play = play
+	def __init__(self, play):
+		Eq.__init__(self, play)
 
 
 class MixedEq(Eq):
-	pass
+	def __init__(self, play):
+		Eq.__init__(self, play)
 
 
-class CorrelatedEq(Eq):
-	pass
+class CorEq(Eq):
+	def __init__(self, play):
+		Eq.__init__(self, play)
 
 
 class CoarseEq(Eq):
-	pass
+	def __init__(self, play):
+		Eq.__init__(self, play)

@@ -1,9 +1,45 @@
 from games.types.game import *
-from games.types.players import Player, FActions
+from games.types.misc import FActions
 import unittest as ut
 import numpy as np
 
 
+class Game_Test(ut.TestCase):
+	class ZeroPlayer(Player):
+		def __init__(self, name, index):
+			Player.__init__(self, name, index, FActions([0]))
+
+		def U(self, play):
+			return 0
+
+	def test_actions(self):
+		actions = Actions()
+		self.assertRaises(NotImplementedError, actions, None)
+
+	def test_players(self):
+		player = Player(None, None, None)
+		self.assertRaises(NotImplementedError, player.U, None)
+		zero = self.ZeroPlayer('zero', 0)
+		self.assertEqual(zero.U(None), 0)
+		self.assertEqual(str(zero), 'ZeroPlayer(0: zero)')
+		self.assertEqual(repr(zero), 'ZeroPlayer(index: 0, name: zero, actions: FActions(0))')
+	
+	def test_game(self):
+		z1 = self.ZeroPlayer('zero', 0)
+		z2 = self.ZeroPlayer('one', 1)
+		z3 = self.ZeroPlayer('two', 2)
+		game = Game([z1, z2, z3])
+		self.assertEqual(game.N, 3)
+		self.assertEqual(game.U_i(0, [0, 0, 0]), 0)
+		self.assertEqual(str(game.actions()), '[FActions(0), FActions(0), FActions(0)]')
+		self.assertEqual(str(game), 'Game(players: ZeroPlayer(0: zero), ZeroPlayer(1: one), ZeroPlayer(2: two))')
+		self.assertEqual(repr(game), 'Game(players: [ZeroPlayer(index: 0, name: zero, actions: FActions(0)), ZeroPlayer(index: 1, name: one, actions: FActions(0)), ZeroPlayer(index: 2, name: two, actions: FActions(0))], eq: [])')
+
+	def test_eq(self):
+		eq = Eq(0)
+		self.assertEqual(str(eq), 'Eq(0)')
+
+'''
 class Game_Test(ut.TestCase):
 	def game1(self):
 		class BoardMove(Board):
@@ -73,6 +109,7 @@ class Game_Test(ut.TestCase):
 		self.assertRaises(ValueError, setnullplayers)
 		self.assertRaises(TypeError, setwrongplayers)
 		self.assertRaises(ValueError, setwrongindex)
+'''
 
 if __name__ == '__main__':
 	ut.main()

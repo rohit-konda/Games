@@ -5,12 +5,9 @@ import numpy as np
 
 class SGFactory_Test(ut.TestCase):
 	def setUp(self):
-		self.fact = SGFactory()
+		self.fact = StrategicFactory()
 		self.pay1 = [np.array([[2, 0], [3, 1]]), np.array([[2, 3], [0, 1]])]
 		self.game = self.fact.make_game(self.pay1)
-
-	def test_make_board(self):
-		self.assertIsNone(self.game._board.state)
 
 	def test_players(self):
 		players = self.game.players

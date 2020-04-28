@@ -37,7 +37,7 @@ class Board:
     def __init__(self, state):
         self.state = state
 
-    def move(self, play):
+    def move(self, play, *args):
         pass
 
     def __str__(self):

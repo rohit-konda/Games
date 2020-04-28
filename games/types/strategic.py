@@ -16,10 +16,8 @@ class StrategicFactory(GFactory):
         return StrategicPlayer(str(ind), ind, actions, payoff)
 
     def _check_args(cls, payoffs):
-        try:
-            iter(payoffs)
-        except TypeError:
-            raise TypeError('Payoffs must be of type iterable.')
+        if type(payoffs) != list:
+            raise TypeError('payoffs must be a list.')
         if not all([isinstance(pay, np.ndarray) for pay in payoffs]):
             raise ValueError('Each element in payoffs must be a numpy array.')
         if payoffs[0].ndim != len(payoffs):

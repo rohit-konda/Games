@@ -16,22 +16,28 @@ class CongestionFactory(GFactory):
         return MutableCongestionPlayer(name, ind, actions, f_r)
 
     def _check_args(cls, all_actions, r_m, list_f_r):
+        N = len(list_f_r)
 
-        N = len(all_actions)
 
-
-class CongestionGame(PotentialGame):
+class CongestionGame(Game):
     def __init__(self, players, r_m):
-        PotentialGame.__init__(self, players)
+        Game.__init__(self, players)
         self.r_m = r_m
 
     def pcover(self, play):
         return [[i for i, pl in enumerate(play) if r in pl] for r in range(self.r_m)]
 
+
+class ShapleyCGame(CongestionGame, PotentialGame):
+    def __init__(self, players, r_m):
+        CongestionGame.__init__(self, players, r_m)
+        PotentialGame.__init__(self, players)
+
+    def f_r(self, r, ncover):
+        raise NotImplementedError
+
     def potential(self, play):
-        pass
-
-
+        return sum([sum([self.f_r(i, len(c)) for c in range(cov)]) for i, cov in enumerate(self.pcover)])
 
 
 class CongestionPlayer(Player):

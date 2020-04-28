@@ -1,42 +1,7 @@
 import numpy as np
 from games.types.misc import WelfareGame
-from games.types.congestion import CongestionGame, CongestionPlayer
+from games.types.congestion import CongestionGame, CongestionPlayer, ShapleyCGame
 from games.types.factory import GFactory
-
-
-class ResourceFactory(GFactory):
-    def make_game(cls, all_actions, values, w, f):
-        cls._check_args(actions, values, w, f)
-        players = [cls._make_player(i, actions, f, values) for i, actions in enumerate(all_actions)]
-        return ResourceGame(players, values, w)
-
-    def _make_player(cls, ind, actions, f, values):
-        name = str(ind)
-        actions = FActions(name, actions)
-        return ResourcePlayer(name, ind, actions, f, values)
-
-    def _check_args(cls, all_actions, values, w, f):
-        pass
-
-
-class ResourceGame(CongestionGame):
-    def __init__(self, players, values, w):
-        CongestionGame.__init__(self, players, len(values))
-        self.values = values
-        self.w = w
-
-    def w_r(self, r, players):
-        return self.values[r] * self.w[len(players)]
-
-
-class ResourcePlayer(CongestionPlayer):
-    def __init__(self, name, index, actions, f, values):
-        CongestionPlayer.__init__(name, index, actions)
-        self.f = f
-        self.values = values
-
-    def f_r(self, r, players):
-        return self.values[r] * self.f[len(players)]
 
 
 class WelfareCongGame(CongestionGame, WelfareGame):
@@ -59,3 +24,55 @@ class MutableWCGame(WelfareCongGame):
 
     def w_r(self, r, players):
         return self._w_r(r, players)
+
+
+class ResourceFactory(GFactory):
+    def make_game(cls, all_actions, values, w, f):
+        cls._check_args(actions, values, w, f)
+        players = [cls._make_player(i, actions, f, values) for i, actions in enumerate(all_actions)]
+        return ResourceGame(players, values, w)
+
+    def _make_player(cls, ind, actions, f, values):
+        name = str(ind)
+        actions = FActions(name, actions)
+        return ResourcePlayer(name, ind, actions, f, values)
+
+    def _check_args(cls, all_actions, values, w, f):
+        if type(w) != list:
+            raise TypeError('w must be a list.')
+        if type(f) != list:
+            raise TypeError('f must be a list.')
+        if type(all_actions) != list:
+            raise TypeError('all_actions must be a list.')
+        if len(w) < 2:
+            raise ValueError('w must be greater than length 2')
+        if len(w) != len(f):
+            raise ValueError('length of w must match f.')
+        if len(all_actions) != len(w) - 1:
+            raise ValueError('length of all_actions plus 1 must match w and f.')
+        if type(all_actions[0]) != list:
+            raise ValueError('actions in all_actions must be a list.')
+        if type(all_actions[0][0]) != tuple:
+            raise ValueError('actions for each player must be a tuple of resources.')
+
+
+class ResourceGame(WelfareCongGame, ShapleyCGame):
+    def __init__(self, players, values, w, f):
+        WelfareCongGame.__init__(self, players, len(values))
+        ShapleyCGame.__init__(self, players, len(values))
+        self.values = values
+        self.w = w
+        self.f = f
+
+    def w_r(self, r, players):
+        return self.values[r] * self.w[len(players)]
+
+
+class ResourcePlayer(CongestionPlayer):
+    def __init__(self, name, index, actions, f, values):
+        CongestionPlayer.__init__(name, index, actions)
+        self.values = values
+        self.f = f
+
+    def f_r(self, r, players):
+        return self.values[r] * self.f[len(players)]

@@ -3,7 +3,7 @@ from games.make_games import *
 import unittest as ut
 import numpy as np
 
-class BruteNashTest(ut.TestCase):
+class BruteNash_Test(ut.TestCase):
 	def setUp(self):
 		self.prisoner_dilemma = [np.array([[2, 0], [3, 1]]), np.array([[2, 3], [0, 1]])]
 

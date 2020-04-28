@@ -1,5 +1,5 @@
 from games.types.strategic import StrategicFactory
-#from games.types.congestion import CongestionFactory, ResourceFactory
+from games.types.congestion import CongestionFactory, ResourceFactory
 
 
 def payoff_game(payoffs):

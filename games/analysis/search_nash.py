@@ -23,8 +23,7 @@ class BruteNash:
             payoff_i = np.zeros(num_act)
             # generate all possible types of action indices
             for a in product(*[range(n_i) for n_i in num_act]):
-                play = [game.actions()[j][k] for j, k in enumerate(a)]
-                payoff_i[a] = game.U_i(i, play)
+                payoff_i[a] = game.U_i(i, a)
             payoffs[i] = payoff_i
         return payoffs
 

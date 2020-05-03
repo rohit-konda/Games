@@ -12,7 +12,7 @@ class StateBoard(Board):
         self.time += 1
         self.state = self.f(play)
 
-class MutableSBoard(StateBoard):
+class MutableStateBoard(StateBoard):
 	def __init__(self, state, f, time=0)
 		StateBoard.__init__(self, state, time)
 		self._f = f

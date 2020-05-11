@@ -1,5 +1,5 @@
 import numpy as np
-from games.types.misc import WelfareGame
+from games.types.misc import WelfareGame, FActions
 from games.types.congestion import CongestionGame, CongestionPlayer, ShapleyCGame
 from games.types.factory import GFactory
 
@@ -13,7 +13,8 @@ class WelfareCongGame(CongestionGame, WelfareGame):
         raise NotImplementedError
 
     def welfare(self, play):
-        pcover = self.pcover(play)
+        all_play = self.all_play(play)
+        pcover = self.pcover(all_play)
         return sum(map(self.w_r, range(self.r_m), pcover))
 
 
@@ -28,13 +29,13 @@ class MutableWCGame(WelfareCongGame):
 
 class ResourceFactory(GFactory):
     def make_game(cls, all_actions, values, w, f):
-        cls._check_args(actions, values, w, f)
+        cls._check_args(all_actions, values, w, f)
         players = [cls._make_player(i, actions, f, values) for i, actions in enumerate(all_actions)]
-        return ResourceGame(players, values, w)
+        return ResourceGame(players, values, w, f)
 
     def _make_player(cls, ind, actions, f, values):
         name = str(ind)
-        actions = FActions(name, actions)
+        actions = FActions(actions)
         return ResourcePlayer(name, ind, actions, f, values)
 
     def _check_args(cls, all_actions, values, w, f):
@@ -56,13 +57,21 @@ class ResourceFactory(GFactory):
             raise ValueError('actions for each player must be a tuple of resources.')
 
 
-class ResourceGame(WelfareCongGame, ShapleyCGame):
-    def __init__(self, players, values, w, f):
-        WelfareCongGame.__init__(self, players, len(values))
+class DistResGame(ShapleyCGame):
+    def __init__(self, players, values, f):
         ShapleyCGame.__init__(self, players, len(values))
         self.values = values
-        self.w = w
         self.f = f
+
+    def f_r(self, r, ncover):
+        raise self.values[r] * self.f[ncover]
+
+
+class ResourceGame(DistResGame, WelfareCongGame):
+    def __init__(self, players, values, w, f):
+        DistResGame.__init__(self, players, values, f)
+        WelfareCongGame.__init__(self, players, len(values))
+        self.w = w
 
     def w_r(self, r, players):
         return self.values[r] * self.w[len(players)]
@@ -70,7 +79,7 @@ class ResourceGame(WelfareCongGame, ShapleyCGame):
 
 class ResourcePlayer(CongestionPlayer):
     def __init__(self, name, index, actions, f, values):
-        CongestionPlayer.__init__(name, index, actions)
+        CongestionPlayer.__init__(self, name, index, actions)
         self.values = values
         self.f = f
 

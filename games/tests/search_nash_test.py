@@ -19,7 +19,8 @@ class BruteNash_Test(ut.TestCase):
 		return all([(p1 == p2).all() for p1, p2 in zip(payoffs_1, payoffs_2)])
 
 
-#class Br
+class BrutePoA_Test(ut.TestCase):
+	pass
 
 
 if __name__ == '__main__':

@@ -2,6 +2,7 @@ import numpy as np
 from itertools import product
 from games.types.equilibrium import PureEq
 from games.types.game import Game
+from games.types.misc import WelfareGame
 
 
 class BruteNash:
@@ -13,11 +14,9 @@ class BruteNash:
             game.eq += eq
         return eq
 
-    def game_to_payoffs(cls, game):
-        if not isinstance(game, Game):
-            raise ValueError('inpur must be of type Game')
-
-        num_act = [len(p.actions) for p in game.players]
+    def game_to_payoffs(cls, game: Game):
+        actions = game.actions()
+        num_act = [len(ac) for ac in actions]
         payoffs = [None]*game.N
         for i, player in enumerate(game.players):
             payoff_i = np.zeros(num_act)
@@ -43,17 +42,13 @@ class BruteNash:
 
 
 class BrutePoA:
-    def game_to_welfare(cls, game):
-        if not isinstance(game, WelfareGame):
-            raise ValueError('game must be of type WelfareGame')
-
+    def game_to_welfare(cls, game: WelfareGame):
         actions = game.actions()
         num_act = [len(ac) for ac in actions]
         welfare = np.zeros(num_act)
         # generate all possible types of action indices
         for a in product(*[range(n_i) for n_i in num_act]):
-            play = [actions[i][j] for i, j in enumerate(a)]
-            welfare[a] = game.welfare(play)
+            welfare[a] = game.welfare(a)
         return welfare
 
     def set_poas(cls, list_pureeq, welfare):

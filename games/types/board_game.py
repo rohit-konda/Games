@@ -33,6 +33,12 @@ class BoardPlayer(Player):
         raise NotImplementedError
 
 
+class StatePlayer(BoardPlayer):
+    def __init__(self, name, index, actions, state):
+        BoardPlayer.__init__(self, name, index, actions)
+        self.state = state
+
+
 class Board:
     def __init__(self, state):
         self.state = state

@@ -4,9 +4,11 @@ class Game:
         self.N = len(players)
         self.eq = []
 
+    def all_play(self, play):
+        return [p.actions(play[p.index]) for p in self.players]
+
     def U_i(self, i, play, *args):
-        all_play = [p.actions(play[p.index]) for p in self.players]
-        return self.players[i].U(all_play)
+        return self.players[i].U(self.all_play(play))
 
     def actions(self):
         return [p.actions for p in self.players]

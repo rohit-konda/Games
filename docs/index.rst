@@ -1,8 +1,3 @@
-.. Games documentation master file, created by
-   sphinx-quickstart on Tue Apr  7 11:52:31 2020.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to Games's documentation!
 =================================
 
@@ -10,7 +5,16 @@ Welcome to Games's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+Documentation for the Code
+**************************
 
+.. automodule:: games.types
+
+Game definitions
+================
+
+.. automodule:: games.types.game
+	:members:
 
 Indices and tables
 ==================

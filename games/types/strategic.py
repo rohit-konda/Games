@@ -5,6 +5,21 @@ from games.types.misc import FActions
 from games.types.factory import GFactory
 
 
+
+class StrategicGame(Game):
+    def __init__(self, players):
+        Game.__init__(self, players)
+
+
+class StrategicPlayer(Player):
+    def __init__(self, name, index, actions, payoff):
+        Player.__init__(self, name, index, actions)
+        self.payoff = payoff
+
+    def U(self, play):
+        return self.payoff[tuple(play)]
+
+
 class StrategicFactory(GFactory):
     def make_game(cls, payoffs):
         cls._check_args(payoffs)
@@ -24,17 +39,3 @@ class StrategicFactory(GFactory):
             raise ValueError('Payoff array dimension must match number of elements in payoffs')
         if not all([np.shape(pay) == np.shape(payoffs[0]) for pay in payoffs]): 
             raise ValueError('Payoff arrays must be of the same shape.')
-
-
-class StrategicGame(Game):
-    def __init__(self, players):
-        Game.__init__(self, players)
-
-
-class StrategicPlayer(Player):
-    def __init__(self, name, index, actions, payoff):
-        Player.__init__(self, name, index, actions)
-        self.payoff = payoff
-
-    def U(self, play):
-        return self.payoff[tuple(play)]

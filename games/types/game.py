@@ -34,11 +34,15 @@ class Actions:
 class Player:
 
     """ Game theoretical based description of a player in a game.
+
+    Attributes:
+        name (str): Label for the player.
+        index (int): Index for the player for easy reference in a list of players in a game.
+        actions (Actions): Actions object that the player can take.
     """
     
     def __init__(self, name: str, index: int, actions: Actions):
         """
-        
         Args:
             name (str): Label for the player.
             index (int): Index for the player for easy reference in a list of players in a game.
@@ -84,11 +88,13 @@ class Player:
 class Eq:
 
     """ Wrapper for an equilibrium solution for the game instance.
+
+    Attributes:
+        play (list): Index of action being taken.
     """
     
     def __init__(self, play: list):
         """
-        
         Args:
             play (list): Index of action being taken.
         """
@@ -106,13 +112,18 @@ class Eq:
 class Game:
 
     """ Bare-bones game theoretical defintion of a game instance.
+
+    Attributes:
+        players (List[Player]): List of players defining the game interactions.
+        actions (List[Actions]): List of Actions object for each player.
+        N (int): Number of players in the game.
+        eq (List[Eq]): List of equilibrium solutions to the game.
     """
     
     def __init__(self, players: List[Player]):
         """
-        
         Args:
-            players (List[Player]): 
+            players (List[Player]): List of players defining the game interactions.
         """
         self.players : List[Player] = players
         self.actions : List[Actions] = [p.actions for p in self.players]

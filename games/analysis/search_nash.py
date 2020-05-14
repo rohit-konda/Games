@@ -15,8 +15,7 @@ class BruteNash:
         return eq
 
     def game_to_payoffs(cls, game: Game):
-        actions = game.actions()
-        num_act = [len(ac) for ac in actions]
+        num_act = [len(ac) for ac in game.actions]
         payoffs = [None]*game.N
         for i, player in enumerate(game.players):
             payoff_i = np.zeros(num_act)
@@ -43,8 +42,7 @@ class BruteNash:
 
 class BrutePoA:
     def game_to_welfare(cls, game: WelfareGame):
-        actions = game.actions()
-        num_act = [len(ac) for ac in actions]
+        num_act = [len(ac) for ac in game.actions]
         welfare = np.zeros(num_act)
         # generate all possible types of action indices
         for a in product(*[range(n_i) for n_i in num_act]):

@@ -44,5 +44,3 @@ class MutablePlayer(Player):
 
     def U(self, play, *args):
         return self._util(play, *args)
-
-

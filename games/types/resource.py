@@ -28,16 +28,19 @@ class MutableWCGame(WelfareCongGame):
 
 
 class ResourceFactory(GFactory):
+    @classmethod
     def make_game(cls, all_actions, values, w, f):
         cls._check_args(all_actions, values, w, f)
         players = [cls._make_player(i, actions, f, values) for i, actions in enumerate(all_actions)]
         return ResourceGame(players, values, w, f)
 
+    @classmethod
     def _make_player(cls, ind, actions, f, values):
         name = str(ind)
         actions = FActions(actions)
         return ResourcePlayer(name, ind, actions, f, values)
 
+    @classmethod
     def _check_args(cls, all_actions, values, w, f):
         if type(w) != list:
             raise TypeError('w must be a list.')

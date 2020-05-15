@@ -15,15 +15,15 @@ class Actions:
     """ Wrapper for an action that a Player can take.
     """
     
-    def __call__(self, action: Any, *args) -> Any:
+    def __call__(self, play: Any, *args) -> Any:
         """ Returns action description based on the index of the action.
         
         Args:
-            action (Any): Index of action being taken.
+            play (Any): Index of action being taken.
             *args: Here for extendability of the class.
         
         Raises:
-            NotImplementedError: Not implemented.
+            NotImplementedError: Needs to be implemented.
 
         Returns:
             Any: The action taken.
@@ -35,6 +35,11 @@ class Player:
 
     """ Game theoretical based description of a player in a game.
 
+    Args:
+        name (str): Label for the player.
+        index (int): Index for the player for easy reference in a list of players in a game.
+        actions (Actions): Actions object that the player can take.
+
     Attributes:
         name (str): Label for the player.
         index (int): Index for the player for easy reference in a list of players in a game.
@@ -42,12 +47,6 @@ class Player:
     """
     
     def __init__(self, name: str, index: int, actions: Actions):
-        """
-        Args:
-            name (str): Label for the player.
-            index (int): Index for the player for easy reference in a list of players in a game.
-            actions (Actions): Actions object that the player can take.
-        """
         self.name: str = name
         self.index: int = index
         self.actions: Actions = actions
@@ -61,10 +60,10 @@ class Player:
             *args: Here for extendability of the class.
         
         Raises:
-            NotImplementedError: Not implemented.
+            NotImplementedError: Needs to be implemented.
 
         Returns:
-            Union[float, Any]: Utility of player i.
+            Union[float, Any]: Utility of the player.
         """
         raise NotImplementedError
 
@@ -89,15 +88,14 @@ class Eq:
 
     """ Wrapper for an equilibrium solution for the game instance.
 
+    Args:
+        play (list): Index of action being taken.
+
     Attributes:
         play (list): Index of action being taken.
     """
     
     def __init__(self, play: list):
-        """
-        Args:
-            play (list): Index of action being taken.
-        """
         self.play: list = play
 
     def __repr__(self) -> str:
@@ -113,6 +111,9 @@ class Game:
 
     """ Bare-bones game theoretical defintion of a game instance.
 
+    Args:
+        players (List[Player]): List of players defining the game interactions.
+
     Attributes:
         players (List[Player]): List of players defining the game interactions.
         actions (List[Actions]): List of Actions object for each player.
@@ -121,10 +122,6 @@ class Game:
     """
     
     def __init__(self, players: List[Player]):
-        """
-        Args:
-            players (List[Player]): List of players defining the game interactions.
-        """
         self.players : List[Player] = players
         self.actions : List[Actions] = [p.actions for p in self.players]
         self.N : int = len(players)
@@ -139,7 +136,7 @@ class Game:
         Returns:
             list: A list of actions taken by each player.
         """
-        return [ac(play[p.index]) for ac in self.actions]
+        return [ac(play[i]) for i, ac in enumerate(self.actions)]
 
     def U_i(self, i: int, play: list, *args) -> Union[float, Any]:
         """ Returns utility of player i based on the play.

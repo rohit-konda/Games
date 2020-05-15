@@ -7,14 +7,16 @@ from games.types.misc import WelfareGame
 
 class BruteNash:
     TOLERANCE = 10**-8
-
-    def find_NCnash(cls, game, add=True):
+    
+    @staticmethod
+    def find_NCnash(game, add=True):
         eq = find_nash(game_to_payoffs(game))
         if add:
             game.eq += eq
         return eq
 
-    def game_to_payoffs(cls, game: Game):
+    @staticmethod
+    def game_to_payoffs(game: Game):
         num_act = [len(ac) for ac in game.actions]
         payoffs = [None]*game.N
         for i, player in enumerate(game.players):
@@ -25,6 +27,7 @@ class BruteNash:
             payoffs[i] = payoff_i
         return payoffs
 
+    @classmethod
     def find_nash(cls, payoffs):
         cpnes = list(np.argwhere(payoffs[0] > np.amax(payoffs[0], 0) - cls.TOLERANCE))
         cpnes = [tuple(cpne) for cpne in cpnes]
@@ -41,7 +44,8 @@ class BruteNash:
 
 
 class BrutePoA:
-    def game_to_welfare(cls, game: WelfareGame):
+    @staticmethod
+    def game_to_welfare(game: WelfareGame):
         num_act = [len(ac) for ac in game.actions]
         welfare = np.zeros(num_act)
         # generate all possible types of action indices
@@ -49,11 +53,13 @@ class BrutePoA:
             welfare[a] = game.welfare(a)
         return welfare
 
-    def set_poas(cls, list_pureeq, welfare):
+    @staticmethod
+    def set_poas(list_pureeq, welfare):
         pne_welfare = [welfare[pne.play] for pne in list_pureeq]
         opt = np.max(welfare)
         price_ratios = [float(pne)/opt for pne in pne_welfare]
         return min(price_ratios), max(price_ratios)
 
-    def get_argopt(cls, welfare): 
+    @staticmethod
+    def get_argopt(welfare): 
         return np.unravel_index(np.argmax(welfare), welfare.shape)

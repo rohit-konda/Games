@@ -1,11 +1,11 @@
-"""
-Author : Rohit Konda
-Copyright (c) 2020 Rohit Konda. All rights reserved.
-Licensed under the MIT License. See LICENSE file in the project root for full license information.
+#!/usr/bin/env python
+# Author : Rohit Konda
+# Copyright (c) 2020 Rohit Konda. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
-Summary:
-    Top level module for creating a Game object instance.
-    Also abstractly defines Player, Action, and Equilibrium objects.
+"""
+Top level module for creating a Game object instance.
+Also abstractly defines Player, Action, and Equilibrium objects.
 """
 from typing import List, Any, Union
 

@@ -1,23 +1,33 @@
-Welcome to Games's documentation!
-=================================
+#######################################
+games: A Python Package for Game Theory
+#######################################
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
-Documentation for the Code
-**************************
+   types/index
+   analysis/index
+   learning/index
+   misc/index
 
-.. automodule:: games.types
+About This Package
+******************
+This package deals with creating games and analyzing them.
 
-Game definitions
-================
-
-.. automodule:: games.types.game
+Making Various Games
+********************
+.. automodule:: games.make_games
 	:members:
 
+Price of Anarchy
+****************
+.. automodule:: games.price_of_anarchy
+	:members:
+
+
 Indices and tables
-==================
+******************
 
 * :ref:`genindex`
 * :ref:`modindex`

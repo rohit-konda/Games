@@ -13,7 +13,7 @@ class StateBoard(Board):
         self.state = self.f(play)
 
 class MutableStateBoard(StateBoard):
-	def __init__(self, state, f, time=0)
+	def __init__(self, state, f, time=0):
 		StateBoard.__init__(self, state, time)
 		self._f = f
 

@@ -1,7 +1,22 @@
 import numpy as np
 from games.types.game import Game, Player
-from games.types.misc import FActions, PotentialGame, WelfareGame
+from games.types.misc import FActions
 from games.types.factory import GFactory
+
+
+class CongestionPlayer(Player):
+    def __init__(self, name, index, actions):
+        Player.__init__(self, name, index, actions)
+
+    def f_r(self, r, players):
+        raise NotImplementedError
+
+    def pcover(self, actions):
+        return [(r, [i for i, ac in enumerate(actions) if r in ac]) for r in actions[self.index]]
+
+    def U(self, actions):
+        pcover = zip(*self.pcover(actions))
+        return sum(map(self.f_r, *tuple([i for i in map(list, pcover)])))
 
 
 class CongestionGame(Game):
@@ -11,19 +26,6 @@ class CongestionGame(Game):
 
     def pcover(self, actions):
         return [[i for i, pl in enumerate(actions) if r in pl] for r in range(self.r_m)]
-
-
-class ShapleyCGame(CongestionGame, PotentialGame):
-    def __init__(self, players, r_m):
-        CongestionGame.__init__(self, players, r_m)
-        PotentialGame.__init__(self, players)
-
-    def f_r(self, r, ncover):
-        raise NotImplementedError
-
-    def potential(self, play):
-        actions = self.all_play(play)
-        return sum([sum([self.f_r(i, len(c)) for c in range(cov)]) for i, cov in enumerate(self.pcover(actions))])
 
 
 class CongestionFactory(GFactory):
@@ -44,24 +46,3 @@ class CongestionFactory(GFactory):
         N = len(list_f_r)
 
 
-class CongestionPlayer(Player):
-    def __init__(self, name, index, actions):
-        Player.__init__(self, name, index, actions)
-
-    def f_r(self, r, players):
-        raise NotImplementedError
-
-    def pcover(self, actions):
-        return [(r, [i for i, pl in enumerate(actions) if r in pl]) for r in actions[self.index]]
-
-    def U(self, actions):
-        pcover = zip(*self.pcover(actions))
-        return sum(map(self.f_r, *tuple([i for i in map(list, pcover)])))
-
-class MutableCGPlayer(CongestionPlayer):
-    def __init__(self, name, index, actions, f_r):
-        CongestionPlayer.__init__(self, name, index, actions)
-        self._f_r = f_r
-
-    def f_r(self, r, players):
-        return self._f_r(r, players)

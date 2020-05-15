@@ -15,18 +15,6 @@ from games.types.factory import GFactory
 from typing import List
 
 
-class StrategicGame(Game):
-
-    """ Strategic Normal Form Game. Inherits from game.types.Game.
-
-    Args:
-        players (List[Player]): List of players in the game.
-    """
-    
-    def __init__(self, players: List[Player]):
-        Game.__init__(self, players)
-
-
 class StrategicPlayer(Player):
 
     """ Player in a normal form game. Inherits from games.types.Player.
@@ -34,14 +22,14 @@ class StrategicPlayer(Player):
     Args:
         name (str): Label for the player.
         index (int): Index for the player for easy reference in a list of players in a game.
-        actions (Actions): Actions object that the player can take.
+        actions (FActions): Actions object that the player can take.
         payoff (np.ndarray): Payoff matrix determining the utility function.
 
     Attributes:
         payoff (np.ndarray): Payoff matrix determining the utility function.
     """
     
-    def __init__(self, name: str, index: int, actions: Actions, payoff: np.ndarray):
+    def __init__(self, name: str, index: int, actions: FActions, payoff: np.ndarray):
         Player.__init__(self, name, index, actions)
         self.payoff: np.ndarray = payoff
 
@@ -55,6 +43,18 @@ class StrategicPlayer(Player):
             float: Utility of the player.
         """
         return self.payoff[tuple(actions)]
+
+
+class StrategicGame(Game):
+
+    """ Strategic Normal Form Game. Inherits from game.types.Game.
+
+    Args:
+        players (List[StrategicPlayer]): List of players in the game.
+    """
+    
+    def __init__(self, players: List[StrategicPlayer]):
+        Game.__init__(self, players)
 
 
 class StrategicFactory(GFactory):

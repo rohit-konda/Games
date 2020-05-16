@@ -2,7 +2,7 @@
 python package for defining various types of games
 
 
-# Todo
+# TODO
 - Repeated games
 - Extensive form games
 - Stochastic Games

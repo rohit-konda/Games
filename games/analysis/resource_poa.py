@@ -1,4 +1,6 @@
+import numpy as np
 from itertools import combinations, product
+from games.types.resource import ResourceFactory
 
 class ResourcePoA:
     @staticmethod
@@ -27,25 +29,27 @@ class ResourcePoA:
             raise ValueError('w must be greater than length 2.')
         if w[0] != 0: 
             raise ValueError('Should input w with w[0] = 0.')
-        if any(w[1:] <= 0):
+        if any([e <= 0 for e in w[1:]]):
             raise ValueError('Should input w with w[n] > 0 for all n > 0.')
 
-    @staticmethod
-    def _check_f(f, w):
-        if f[0] != 0: 
-            raise ValueError('Should input f with f[0] = 0.')
-        if self.f[1] <= 0:
-            raise ValueError('PoA = 0 if f[1] <= 0.')
+    @classmethod
+    def _check_args(cls, f, w):
+        cls._check_w(w)
+        
         if len(f) != len(w):
             raise ValueError('Should input f with length matching w.')
+        if f[0] != 0: 
+            raise ValueError('Should input f with f[0] = 0.')
+        if f[1] <= 0:
+            raise ValueError('PoA = 0 if f[1] <= 0.')
 
     @classmethod
     def function_poa(cls, w):
         cls._check_w(w)
-        N = len(w)
-        I_r = cls.I_r(n)
+        N = len(w)-1
+        I_r = cls.I_r(N)
         num = len(I_r)
-        
+
         G = np.zeros((num+1, N+1), dtype='float')
         h = np.zeros((num+1, 1), dtype='float')
         h[num] = -1
@@ -64,9 +68,8 @@ class ResourcePoA:
 
     @classmethod
     def dual_poa(cls, f, w): 
-        cls._check_w(w)
-        cls._check_f(f, w)
-        N = len(w)
+        cls._check_args(f, w)
+        N = len(w)-1
         I_r = cls.I_r(N)
         num = len(I_r)
 
@@ -84,9 +87,8 @@ class ResourcePoA:
 
     @classmethod
     def primal_poa(cls, f, w):     
-        cls._check_w(w)
-        cls._check_f(f, w)
-        N = len(w)
+        cls._check_args(f, w)
+        N = len(w)-1
         I = cls.I(N)
         num = len(I)
 
@@ -101,7 +103,7 @@ class ResourcePoA:
         return c, G, h, A, b
 
     @staticmethod
-    def worst_case(cls, theta, N):
+    def _worst_case(theta, N):
         values = []
         actions = [[(), ()] for _ in range(N)]
         I = cls.I(N)
@@ -118,3 +120,9 @@ class ResourcePoA:
                     c += N
         
         return actions, values
+
+    @classmethod
+    def worst_case_game(cls, theta, w, f):
+        cls._check_args(f, w)
+        actions, values = cls._worst_case(theta, len(w)-1)
+        return ResourceFactory.make_game(actions, values, w, f)

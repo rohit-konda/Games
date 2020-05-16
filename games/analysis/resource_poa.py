@@ -22,19 +22,16 @@ class ResourcePoA:
         return [j for j in list(set(ind)) if j != (0, 0, 0)]
 
     @staticmethod
-    def _check_welfare(w):
-        try:
-            iter(w)
-        except Exception as e:
-            raise ValueError('w must be iterable.')
-
-    @staticmethod
-    def _check_args(f, w):
+    def _check_w(w):
+        if len(w) < 2:
+            raise ValueError('w must be greater than length 2.')
         if w[0] != 0: 
             raise ValueError('Should input w with w[0] = 0.')
         if any(w[1:] <= 0):
             raise ValueError('Should input w with w[n] > 0 for all n > 0.')
 
+    @staticmethod
+    def _check_f(f, w):
         if f[0] != 0: 
             raise ValueError('Should input f with f[0] = 0.')
         if self.f[1] <= 0:
@@ -44,7 +41,7 @@ class ResourcePoA:
 
     @classmethod
     def function_poa(cls, w):
-        cls.check_welfare(w)
+        cls._check_w(w)
         N = len(w)
         I_r = cls.I_r(n)
         num = len(I_r)
@@ -55,8 +52,7 @@ class ResourcePoA:
         c = np.zeros((N+1, 1), dtype='float')
         c[0] = 1
 
-        for i, a, x, b in enumerate(I_r):
-            #a, x, b = i_r
+        for i, (a, x, b) in enumerate(I_r):
             G[i, a+x] = a
             if a+x < N:
                 G[i, a+x+1] = -b
@@ -68,8 +64,8 @@ class ResourcePoA:
 
     @classmethod
     def dual_poa(cls, f, w): 
-        cls.check_welfare(w)
-        cls.check_f(f, w)
+        cls._check_w(w)
+        cls._check_f(f, w)
         N = len(w)
         I_r = cls.I_r(N)
         num = len(I_r)
@@ -78,8 +74,7 @@ class ResourcePoA:
         h = np.zeros((num+1, 1), dtype='float')
         c = np.array([[0], [1]], dtype='float')  # variables = [lambda , mu]
 
-        for i, a, x, b in enumerate(I_r):
-            #a, x, b = i_r
+        for i, (a, x, b) in enumerate(I_r):
             G[i, 0] = a*f[a+x] - b*f[a+x+1] if a+x < N else a*f[a+x]
             G[i, 1] = -w[a+x]
             h[i] = -w[b+x]
@@ -89,8 +84,8 @@ class ResourcePoA:
 
     @classmethod
     def primal_poa(cls, f, w):     
-        cls.check_welfare(w)
-        cls.check_f(f, w)
+        cls._check_w(w)
+        cls._check_f(f, w)
         N = len(w)
         I = cls.I(N)
         num = len(I)
@@ -105,15 +100,14 @@ class ResourcePoA:
 
         return c, G, h, A, b
 
-    @classmethod
+    @staticmethod
     def worst_case(cls, theta, N):
         values = []
         actions = [[(), ()] for _ in range(N)]
         I = cls.I(N)
 
         c = 0
-        for j, a, x, b in enumerate(I):
-                #a, x, b = res
+        for j, (a, x, b) in enumerate(I):
                 val = round(theta[j], 8)  # round theta to avoid ~0 value resources
                 if val > 0:
                     values += [val/N]*N

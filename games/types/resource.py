@@ -5,6 +5,7 @@ from games.types.cong_extensions import DistResGame, WelfareCongGame
 from games.types.factory import GFactory
 from typing import List
 
+
 class ResourcePlayer(CongestionPlayer):
     def __init__(self, name: str, index: int, actions: FActions, f: List[float], values: List[float]):
         CongestionPlayer.__init__(self, name, index, actions)

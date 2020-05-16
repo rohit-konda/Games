@@ -48,6 +48,7 @@ class WelfareCongGame(CongestionGame, WelfareGame):
         return sum(map(self.w_r, range(self.r_m), pcover))
 
 
+
 class MutableWCGame(WelfareCongGame):
     def __init__(self, players, r_m, w_r):
         WelfareCongGame.__init__(self, players, r_m)

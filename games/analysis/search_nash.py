@@ -7,13 +7,6 @@ from games.types.misc import WelfareGame
 
 class BruteNash:
     TOLERANCE = 10**-8
-    
-    @staticmethod
-    def find_NCnash(game, add=True):
-        eq = find_nash(game_to_payoffs(game))
-        if add:
-            game.eq += eq
-        return eq
 
     @staticmethod
     def game_to_payoffs(game: Game):
@@ -26,6 +19,13 @@ class BruteNash:
                 payoff_i[a] = game.U_i(i, a)
             payoffs[i] = payoff_i
         return payoffs
+
+    @classmethod
+    def find_NCnash(cls, game, add=True):
+        eq = find_nash(cls.game_to_payoffs(game))
+        if add:
+            game.eq += eq
+        return eq
 
     @classmethod
     def find_nash(cls, payoffs):

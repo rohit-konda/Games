@@ -2,6 +2,10 @@ import numpy as np
 from itertools import combinations, product
 from games.types.resource import ResourceFactory
 
+
+def 
+
+
 class ResourcePoA:
     @staticmethod
     def I(N):
@@ -103,7 +107,7 @@ class ResourcePoA:
         return c, G, h, A, b
 
     @staticmethod
-    def _worst_case(theta, N):
+    def worst_case(theta, N):
         values = []
         actions = [[(), ()] for _ in range(N)]
         I = cls.I(N)
@@ -120,9 +124,3 @@ class ResourcePoA:
                     c += N
         
         return actions, values
-
-    @classmethod
-    def worst_case_game(cls, theta, w, f):
-        cls._check_args(f, w)
-        actions, values = cls._worst_case(theta, len(w)-1)
-        return ResourceFactory.make_game(actions, values, w, f)

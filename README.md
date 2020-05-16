@@ -2,6 +2,8 @@
 python package for defining various types of games
 
 
+[Documentation](docs/_build/html/index.html)
+
 # TODO
 - Repeated games
 - Extensive form games

@@ -1,7 +1,0 @@
-.. _games :
-
-Game definitions
-================
-
-.. automodule:: games.types.game
-	:members:

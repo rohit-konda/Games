@@ -33,7 +33,7 @@ Congestion Games
 
 Board Games
 ***********
-.. automodule:: games.types.board_game
+.. automodule:: games.types.boardgame
 	:members:
 
 Equilibrium Definitions
@@ -48,7 +48,7 @@ Distributed Resource Games
 
 State Based Games
 *****************
-.. automodule:: games.types.state_game
+.. automodule:: games.types.stategame
 	:members:
 
 Miscellaneous 

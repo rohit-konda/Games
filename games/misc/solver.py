@@ -1,6 +1,13 @@
-from warnings import warn
+#!/usr/bin/env python
+# Author : Rohit Konda
+# Copyright (c) 2020 Rohit Konda. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
-def lp(solver, c, G, h, A=None, b=None, progress=False):
+from warnings import warn
+from typing import Dict, Any
+import numpy as np
+
+def lp(solver, c: np.ndarray, G: np.ndarray, h: np.ndarray, A: np.ndarray=None, b: np.ndarray=None, progress: bool=False) -> Dict[str, Any]:
     wrapper = SolverWrapper(solver, progress)
     return wrapper.lp(c, G, h, A, b)
 
@@ -9,13 +16,13 @@ class SolverWrapper:
     SUPPORTED = ['cvxopt']
     LP_SUPPORTED = ['cvxopt']
 
-    def __init__(self, solver, progress):
+    def __init__(self, solver: str, progress: bool):
         self.solver = solver
         self.check_solver(solver)
         self.progress = progress
         self.returnall = False
     
-    def lp(self, c, G, h, A, b):
+    def lp(self, c: np.ndarray, G: np.ndarray, h: np.ndarray, A: np.ndarray, b: np.ndarray) -> Dict[str, Any]:
         if self.solver == 'cvxopt':
             from cvxopt import matrix
             from cvxopt.solvers import lp
@@ -36,7 +43,7 @@ class SolverWrapper:
         else:
             raise ImportError('Not a valid or implemented lp solver. Supported lp solvers include ' + ', '.join(self.LP_SUPPORTED) + '.')
 
-    def check_solver(self, solver):
+    def check_solver(self, solver: str) -> None:
         if self.solver == 'cvxopt':
             pass
         else:

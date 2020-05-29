@@ -1,9 +1,14 @@
-class CongestionPoA:
+#!/usr/bin/env python
+# Author : Rohit Konda
+# Copyright (c) 2020 Rohit Konda. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
-    def primal_poa(cls, flist, w):     
-        """ primal formulation for calculation of Price of Anarchy """
-        def nash_func(j, Na, Nb, Nx):
-            """ define the nash constraint for the computable poa calculation """
+import numpy as np
+from typing import List, Callable, Tuple
+
+class CongestionPoA:
+    def primal_poa(cls, flist: List[Callable[[List[int]], float]], w: Callable[[List[int]], float]) -> Tuple[np.ndarray, ...]:
+        def nash_func(j: int, Na: List[int], Nb: List[int], Nx: List[int]) -> int:
             if j in Na:
                 return flist[j](Na + Nx)
             elif j in Nb:
@@ -11,9 +16,7 @@ class CongestionPoA:
             else:
                 return 0
 
-
-        cls.check_welfare(w)
-        cls.check_f(flist)
+        cls.check_args(w, flist)
         
         n = cls.n
         n_c = 4**n - 1
@@ -40,14 +43,11 @@ class CongestionPoA:
         
         return c, G, h, A, b
 
-    def check_welfare(cls, w):
-        pass
-
-    def check_f(cls, flist):
+    def check_args(cls, w: Callable[[List[int]], float], flist: List[Callable[[List[int]], float]]) -> None:
         pass
 
 
-    def worst_case(cls, theta, N):
+    def worst_case(cls, theta: List[float] , N: int) -> Tuple[List[float], List[List[tuple]]]:
         """ get worst case instance """
         values = []
         actions = [[(), ()] for _ in range(N)]

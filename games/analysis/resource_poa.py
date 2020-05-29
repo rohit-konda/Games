@@ -1,14 +1,18 @@
+#!/usr/bin/env python
+# Author : Rohit Konda
+# Copyright (c) 2020 Rohit Konda. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
 import numpy as np
 from itertools import combinations, product
-from games.types.resource import ResourceFactory
-
-
-def 
+from typing import List, Tuple
 
 
 class ResourcePoA:
+    TOL = 8
+
     @staticmethod
-    def I(N):
+    def I(N: int) -> List[Tuple[int, int, int]]:
         ind = []
         for i in range(1, N+1):
             all_i = [(j[0], j[1]-j[0]-1, i-j[1]+1) for j in combinations(range(i+2), 2)]
@@ -16,7 +20,7 @@ class ResourcePoA:
         return ind
 
     @staticmethod
-    def I_r(N):
+    def I_r(N: int) -> List[Tuple[int, int, int]]:
         ind = []
         for i in range(0, N+1):
             not_a = [(0, j, i) for j in range(N+1-i)]
@@ -28,7 +32,7 @@ class ResourcePoA:
         return [j for j in list(set(ind)) if j != (0, 0, 0)]
 
     @staticmethod
-    def _check_w(w):
+    def _check_w(w: List[float]) -> None:
         if len(w) < 2:
             raise ValueError('w must be greater than length 2.')
         if w[0] != 0: 
@@ -37,7 +41,7 @@ class ResourcePoA:
             raise ValueError('Should input w with w[n] > 0 for all n > 0.')
 
     @classmethod
-    def _check_args(cls, f, w):
+    def _check_args(cls, f: List[float], w: List[float]) -> None:
         cls._check_w(w)
         
         if len(f) != len(w):
@@ -48,7 +52,7 @@ class ResourcePoA:
             raise ValueError('PoA = 0 if f[1] <= 0.')
 
     @classmethod
-    def function_poa(cls, w):
+    def function_poa(cls, w: List[float]) -> Tuple[np.ndarray, ...]:
         cls._check_w(w)
         N = len(w)-1
         I_r = cls.I_r(N)
@@ -71,7 +75,7 @@ class ResourcePoA:
         return c, G, h
 
     @classmethod
-    def dual_poa(cls, f, w): 
+    def dual_poa(cls, f: List[float], w: List[float]) -> Tuple[np.ndarray, ...]: 
         cls._check_args(f, w)
         N = len(w)-1
         I_r = cls.I_r(N)
@@ -90,7 +94,7 @@ class ResourcePoA:
         return c, G, h
 
     @classmethod
-    def primal_poa(cls, f, w):     
+    def primal_poa(cls, f: List[float], w: List[float]) -> Tuple[np.ndarray, ...]:     
         cls._check_args(f, w)
         N = len(w)-1
         I = cls.I(N)
@@ -106,21 +110,21 @@ class ResourcePoA:
 
         return c, G, h, A, b
 
-    @staticmethod
-    def worst_case(theta, N):
+    @classmethod
+    def worst_case(cls, theta: List[float], N: int) -> Tuple[List[int], List[List[tuple]]]:
         values = []
         actions = [[(), ()] for _ in range(N)]
         I = cls.I(N)
 
         c = 0
         for j, (a, x, b) in enumerate(I):
-                val = round(theta[j], 8)  # round theta to avoid ~0 value resources
+                val = round(theta[j], cls.TOL)  # round theta to avoid ~0 value resources
                 if val > 0:
                     values += [val/N]*N
                     ind = [(k % N) + c for k in range(2*N)]
                     for p in range(N):
-                        strategies[p][0] = strategies[p][0] + tuple(ind[p:p+a+x])
-                        strategies[p][1] = strategies[p][1] + tuple(ind[p+N-b:p+N+x])
+                        actions[p][0] = actions[p][0] + tuple(ind[p:p+a+x])
+                        actions[p][1] = actions[p][1] + tuple(ind[p+N-b:p+N+x])
                     c += N
         
         return actions, values

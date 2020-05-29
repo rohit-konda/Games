@@ -1,5 +1,12 @@
-from games.analysis.congestion_poa import *
-from games.analysis.search_nash import *
+#!/usr/bin/env python
+# Author : Rohit Konda
+# Copyright (c) 2020 Rohit Konda. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+from games.analysis.congestion_poa import CongestionPoA
+from games.analysis.resource_poa import ResourcePoA
+from games.types.resource import ResourceFactory
+from games.analysis.search_nash import BrutePoA, BruteNash
 from games.misc.solver import lp
 
 
@@ -37,7 +44,7 @@ def worst_game(f, w, solver):
 	theta = lp(solver, ResourcePoA.primal_poa(f, w))['argmin']
 	N = len(f)
 	actions, values = ResourcePoA.worst_case(theta, N)
-	return 
+	return ResourceFactory.make_game(actions, values, w, f)
 
 
 def cong_poa(flist, w, solver):
@@ -47,4 +54,5 @@ def cong_poa(flist, w, solver):
 def cong_worst_game(flist, w, solver):
 	theta = lp(solver, CongestionPoA.primal_poa(flist, w))['argmin']
 	N = len(w)
-	return CongestionPoA.worst_case(theta, N)
+	actions, values = CongestionPoA.worst_case(theta, N)
+	return None

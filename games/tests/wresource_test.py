@@ -1,4 +1,4 @@
-from games.types.resource import ResourceFactory
+from games.types.wresource import WResourceFactory
 from games.make_games import get_payoff
 from games.tests.strategic_test import equalpayoffs
 from games.analysis.search_nash import BrutePoA
@@ -9,11 +9,11 @@ import numpy as np
 class ResourceFactory_Test(ut.TestCase):
 	def setUp(self):
 		def f_r(r, players): return len(players)
-		game1_kwargs = {'all_actions' : [[(0, 1), (1,)], [(0,), (1,)]],
+		game1_kwargs = {'all_actions' : [[[0, 1], [1]], [[0], [1]]],
 		'values' : [2, 1],
 		'f' : [0, 1, 2],
 		'w' : [0, 1, 1]}
-		self.game1 = ResourceFactory.make_game(**game1_kwargs)
+		self.game1 = WResourceFactory.make_game(**game1_kwargs)
 
 	def test_make_game(self):
 		g1 = self.game1
@@ -25,7 +25,7 @@ class ResourceFactory_Test(ut.TestCase):
 	def test_make_players(self):
 		p_gm1 = self.game1.players[0]
 		self.assertEqual(p_gm1.name, '0')
-		self.assertListEqual(p_gm1.actions.actions, [(0, 1), (1,)])
+		self.assertListEqual(p_gm1.actions.actions, [[0, 1], [1]])
 		self.assertEqual(p_gm1.f, self.game1.f)
 		self.assertEqual(p_gm1.values, self.game1.values)
 
@@ -48,12 +48,12 @@ class ResourceFactory_Test(ut.TestCase):
 
 	def test_check_args(self):
 		gmargs = [[[()], [()]], [0], [0], [0, 1, 2]]
-		self.assertRaises(ValueError, ResourceFactory.make_game, *gmargs)
+		self.assertRaises(ValueError, WResourceFactory.make_game, *gmargs)
 		gmargs[2] = [0, 1]
-		self.assertRaises(ValueError, ResourceFactory.make_game, *gmargs)
+		self.assertRaises(ValueError, WResourceFactory.make_game, *gmargs)
 		gmargs[2] = [0, 1, 2]
 		gmargs[0] += [[()]]
-		self.assertRaises(ValueError, ResourceFactory.make_game, *gmargs)
+		self.assertRaises(ValueError, WResourceFactory.make_game, *gmargs)
 
 if __name__ == '__main__':
 	ut.main()

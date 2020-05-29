@@ -12,9 +12,11 @@ class Congestion_Test(ut.TestCase):
 		'list_f_r' : [f_r, f_r]}
 
 	def test_make_game(self):
-		g1 = self.game1
-		game = CongestionFactory.make_game(**g1)
+		game = CongestionFactory.make_game(**self.game1)
 		self.assertTrue(equalpayoffs(get_payoff(game), [np.array([[3., 3.], [1., 2.]]), np.array([[2., 2.], [1., 2.]])]))
+
+	def test_pcover(self):
+		game = CongestionFactory.make_game(**self.game1)
 		self.assertEqual(game.pcover([[0], [0, 1]]), [(0, [0, 1]), (1, [1])])
 
 	def test_make_players(self):

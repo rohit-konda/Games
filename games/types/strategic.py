@@ -17,7 +17,7 @@ from typing import List
 
 class StrategicPlayer(Player):
 
-    """ Player in a normal form game. Inherits from games.types.Player.
+    """ Player in a normal form game.
     
     Args:
         name (str): Label for the player.
@@ -33,11 +33,11 @@ class StrategicPlayer(Player):
         Player.__init__(self, name, index, actions)
         self.payoff: np.ndarray = payoff
 
-    def U(self, actions: list) -> float:
+    def U(self, actions: List[int]) -> float:
         """ Utility function based on a predefined payoff matrix.
         
         Args:
-            actions (list): List of actions that each player in the game has taken.
+            actions (List[int]): List of actions that each player in the game has taken.
         
         Returns:
             float: Utility of the player.
@@ -47,7 +47,7 @@ class StrategicPlayer(Player):
 
 class StrategicGame(Game):
 
-    """ Strategic Normal Form Game. Inherits from game.types.Game.
+    """ Strategic Normal Form Game.
 
     Args:
         players (List[StrategicPlayer]): List of players in the game.

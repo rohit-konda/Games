@@ -48,8 +48,10 @@ class ResourcePoA_Test(ut.TestCase):
 		f = [0., 1, 0]
 		c, G, h, A, b = ResourcePoA.primal_poa(f, w)
 		theta = lp('cvxopt', c, G, h, A, b)['argmin']
-		
-
+		ResourcePoA.TOL =  5
+		actions, values = ResourcePoA.worst_case(theta, 2)
+		self.assertEqual(actions, [[(2,), (1, 3)], [(3,), (0, 2)]])
+		self.assertEqual(values, [0.5, 0.5, 0.5, 0.5])
 
 
 if __name__ == '__main__':

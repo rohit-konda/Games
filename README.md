@@ -1,9 +1,6 @@
 # Games
 python package for defining various types of games
 
-
-[Documentation](html/index.html)
-
 # TODO
 - Repeated games
 - Extensive form games
@@ -11,3 +8,12 @@ python package for defining various types of games
 - State Based Games
 - Zero Sum Game Analysis
 - Learning Algorithms
+
+# To Finish
+- congestion testing
+- cong extensions testing
+- board game testing
+- misc testing
+- state_game testing
+- congestion poa testing
+- add documentation

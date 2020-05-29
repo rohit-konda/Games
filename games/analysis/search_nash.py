@@ -1,15 +1,22 @@
+#!/usr/bin/env python
+# Author : Rohit Konda
+# Copyright (c) 2020 Rohit Konda. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
 import numpy as np
 from itertools import product
 from games.types.equilibrium import PureEq
 from games.types.game import Game
 from games.types.misc import WelfareGame
+import numpy as np
+from typing import List
 
 
 class BruteNash:
     TOLERANCE = 10**-8
 
     @staticmethod
-    def game_to_payoffs(game: Game):
+    def game_to_payoffs(game: Game) -> List[np.ndarray]:
         num_act = [len(ac) for ac in game.actions]
         payoffs = [None]*game.N
         for i, player in enumerate(game.players):
@@ -21,14 +28,14 @@ class BruteNash:
         return payoffs
 
     @classmethod
-    def find_NCnash(cls, game, add=True):
+    def find_NCnash(cls, game: Game, add=True) -> List[PureEq]:
         eq = find_nash(cls.game_to_payoffs(game))
         if add:
             game.eq += eq
         return eq
 
     @classmethod
-    def find_nash(cls, payoffs):
+    def find_nash(cls, payoffs: List[np.ndarray]) -> List[PureEq]:
         cpnes = list(np.argwhere(payoffs[0] > np.amax(payoffs[0], 0) - cls.TOLERANCE))
         cpnes = [tuple(cpne) for cpne in cpnes]
         N = len(payoffs)

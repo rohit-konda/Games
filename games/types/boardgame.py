@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+# Author : Rohit Konda
+# Copyright (c) 2020 Rohit Konda. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
 from games.types.game import Game, Player
 from games.types.factory import GFactory
 from abc import ABC, abstractmethod
@@ -31,12 +36,6 @@ class BoardPlayer(Player):
 
     def U(self, play, board, *args):
         raise NotImplementedError
-
-
-class StatePlayer(BoardPlayer):
-    def __init__(self, name, index, actions, state):
-        BoardPlayer.__init__(self, name, index, actions)
-        self.state = state
 
 
 class Board:

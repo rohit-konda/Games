@@ -31,7 +31,7 @@ class Game_Test(ut.TestCase):
 		game = Game([z1, z2, z3])
 		self.assertEqual(game.N, 3)
 		self.assertEqual(game.U_i(0, [0, 0, 0]), 0)
-		self.assertEqual(str(game.actions()), '[FActions(0), FActions(0), FActions(0)]')
+		self.assertEqual(str(game.actions), '[FActions(0), FActions(0), FActions(0)]')
 		self.assertEqual(str(game), 'Game(players: ZeroPlayer(0: zero), ZeroPlayer(1: one), ZeroPlayer(2: two))')
 		self.assertEqual(repr(game), 'Game(players: [ZeroPlayer(index: 0, name: zero, actions: FActions(0)), ZeroPlayer(index: 1, name: one, actions: FActions(0)), ZeroPlayer(index: 2, name: two, actions: FActions(0))], eq: [])')
 

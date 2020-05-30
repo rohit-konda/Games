@@ -53,9 +53,203 @@
 </div>
 <div class="section" id="module-games.analysis.congestion_poa">
 <span id="poa-calculation-for-congestion-games"></span><h2>PoA calculation for Congestion Games<a class="headerlink" href="#module-games.analysis.congestion_poa" title="Permalink to this headline">¶</a></h2>
+<p>Module for calculating price of anarchy for a general class of congestion games, where
+U_i(a) = sum over resources ( value of resource * C_i(players that cover resource r))</p>
+<dl class="class">
+<dt id="games.analysis.congestion_poa.CongestionPoA">
+<em class="property">class </em><code class="sig-prename descclassname">games.analysis.congestion_poa.</code><code class="sig-name descname">CongestionPoA</code><a class="headerlink" href="#games.analysis.congestion_poa.CongestionPoA" title="Permalink to this definition">¶</a></dt>
+<dd><p>PoA Calculation for a general class of congestion games.
+Results in an LP with 4^n constraints, with n being the number of players.</p>
+<dl class="attribute">
+<dt id="games.analysis.congestion_poa.CongestionPoA.TOL">
+<code class="sig-name descname">TOL</code><a class="headerlink" href="#games.analysis.congestion_poa.CongestionPoA.TOL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Significant figure for rounding to 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="games.analysis.congestion_poa.CongestionPoA.primal_poa">
+<em class="property">classmethod </em><code class="sig-name descname">primal_poa</code><span class="sig-paren">(</span><em class="sig-param">n: int, w: Callable[[List[int]], float], flist: List[Callable[[List[int]], float]]</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, ...]<a class="headerlink" href="#games.analysis.congestion_poa.CongestionPoA.primal_poa" title="Permalink to this definition">¶</a></dt>
+<dd><p>Primal program for calculating the price of anarcy in a congestion game.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of players in game.</p></li>
+<li><p><strong>w</strong> (<em>Callable</em><em>[</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>]</em>) – What players are covering resource -&gt; utility for the system.</p></li>
+<li><p><strong>flist</strong> (<em>List</em><em>[</em><em>Callable</em><em>[</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>]</em><em>]</em>) – What players are covering resource -&gt; Utility for player i, for i in the list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>LP Parameters for getting PoA calculations.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[np.ndarray, ..]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="games.analysis.congestion_poa.CongestionPoA.worst_case">
+<em class="property">classmethod </em><code class="sig-name descname">worst_case</code><span class="sig-paren">(</span><em class="sig-param">theta: List[float], N: int</em><span class="sig-paren">)</span> &#x2192; Tuple[List[float], List[List[tuple]]]<a class="headerlink" href="#games.analysis.congestion_poa.CongestionPoA.worst_case" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives list of player actions and values of the worst case congestion game that attains PoA.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theta</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>]</em>) – values associated with each allocation type - given by the primal program for PoA.</p></li>
+<li><p><strong>N</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of players.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(actions: list of possible actions for each player, values: value of each resource in list)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[List[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a>], List[List[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a>]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-games.analysis.search_nash">
 <span id="brute-force-search-algorithms"></span><h2>Brute Force Search Algorithms<a class="headerlink" href="#module-games.analysis.search_nash" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="games.analysis.search_nash.BruteNash">
+<em class="property">class </em><code class="sig-prename descclassname">games.analysis.search_nash.</code><code class="sig-name descname">BruteNash</code><a class="headerlink" href="#games.analysis.search_nash.BruteNash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collection of methods for brute force calculation of Nash equilibrium in noncooperative games.</p>
+<dl class="attribute">
+<dt id="games.analysis.search_nash.BruteNash.TOLERANCE">
+<code class="sig-name descname">TOLERANCE</code><a class="headerlink" href="#games.analysis.search_nash.BruteNash.TOLERANCE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Numerical tolerance for float point comparisons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="games.analysis.search_nash.BruteNash.find_NCnash">
+<em class="property">classmethod </em><code class="sig-name descname">find_NCnash</code><span class="sig-paren">(</span><em class="sig-param">game: games.types.game.Game</em>, <em class="sig-param">add=True</em><span class="sig-paren">)</span> &#x2192; List[games.types.equilibrium.PureEq]<a class="headerlink" href="#games.analysis.search_nash.BruteNash.find_NCnash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find nash equilibrium of a specified noncooperative game through brute force search.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>game</strong> (<a class="reference internal" href="../types/index.html#games.types.game.Game" title="games.types.game.Game"><em>Game</em></a>) – Noncooperative Game with finite action sets.</p></li>
+<li><p><strong>add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to add the calculated equilibrium to Game.eq member.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of calculated Nash equilibrium.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="../types/index.html#games.types.equilibrium.PureEq" title="games.types.equilibrium.PureEq">PureEq</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="games.analysis.search_nash.BruteNash.find_nash">
+<em class="property">classmethod </em><code class="sig-name descname">find_nash</code><span class="sig-paren">(</span><em class="sig-param">payoffs: List[numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; List[games.types.equilibrium.PureEq]<a class="headerlink" href="#games.analysis.search_nash.BruteNash.find_nash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find nash equilibrium of specified list of payoff matrices through brute force search.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>payoffs</strong> (<em>List</em><em>[</em><em>np.ndarray</em><em>]</em>) – List of payoff arrays defining the utilities of the game.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of calculated Nash equilibrium.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="../types/index.html#games.types.equilibrium.PureEq" title="games.types.equilibrium.PureEq">PureEq</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="games.analysis.search_nash.BruteNash.game_to_payoffs">
+<em class="property">static </em><code class="sig-name descname">game_to_payoffs</code><span class="sig-paren">(</span><em class="sig-param">game: games.types.game.Game</em><span class="sig-paren">)</span> &#x2192; List[numpy.ndarray]<a class="headerlink" href="#games.analysis.search_nash.BruteNash.game_to_payoffs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turn a noncooperative game into strategic form through calculation of payoff arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>game</strong> (<a class="reference internal" href="../types/index.html#games.types.game.Game" title="games.types.game.Game"><em>Game</em></a>) – Noncooperative game, all players must have a finite number of actioms.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of payoff arrays defining the game.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="games.analysis.search_nash.BrutePoA">
+<em class="property">class </em><code class="sig-prename descclassname">games.analysis.search_nash.</code><code class="sig-name descname">BrutePoA</code><a class="headerlink" href="#games.analysis.search_nash.BrutePoA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collection of methods used for calculating price of anarchy/stability.
+We use the designation PoA = min (welfare of pne / welfare of optimal) over all pne
+and PoS = max (welfare of pne / welfare of optimal) over all pne.</p>
+<dl class="method">
+<dt id="games.analysis.search_nash.BrutePoA.game_to_welfare">
+<em class="property">static </em><code class="sig-name descname">game_to_welfare</code><span class="sig-paren">(</span><em class="sig-param">game: games.types.misc.WelfareGame</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#games.analysis.search_nash.BrutePoA.game_to_welfare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the Welfare matrix from a Welfare Game.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>game</strong> (<a class="reference internal" href="../types/index.html#games.types.misc.WelfareGame" title="games.types.misc.WelfareGame"><em>WelfareGame</em></a>) – Welfare Game, all players must have a finite action set.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Welfare matrix.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="games.analysis.search_nash.BrutePoA.get_argopt">
+<em class="property">static </em><code class="sig-name descname">get_argopt</code><span class="sig-paren">(</span><em class="sig-param">welfare: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[int, ...]<a class="headerlink" href="#games.analysis.search_nash.BrutePoA.get_argopt" title="Permalink to this definition">¶</a></dt>
+<dd><p>get index of where maximum is attained for a welfare matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>welfare</strong> (<em>np.ndarray</em>) – Welfare matrix.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An index where maximum is attained (may not be unique though).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>, ..]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="games.analysis.search_nash.BrutePoA.set_poas">
+<em class="property">static </em><code class="sig-name descname">set_poas</code><span class="sig-paren">(</span><em class="sig-param">list_pureeq: List[games.types.equilibrium.PureEq], welfare: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[float, float]<a class="headerlink" href="#games.analysis.search_nash.BrutePoA.set_poas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get price of anarchy and prince of stability based on the list of pure equilibrium of the game.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>list_pureeq</strong> (<em>List</em><em>[</em><a class="reference internal" href="../types/index.html#games.types.equilibrium.PureEq" title="games.types.equilibrium.PureEq"><em>PureEq</em></a><em>]</em>) – List of pure equilibria of the given game</p></li>
+<li><p><strong>welfare</strong> (<em>np.ndarray</em>) – Welfare matrix of the game.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>PoA, PoS</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-games.analysis.zerosum">
 <span id="zero-sum-game-calculations"></span><h2>Zero Sum Game Calculations<a class="headerlink" href="#module-games.analysis.zerosum" title="Permalink to this headline">¶</a></h2>

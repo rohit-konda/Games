@@ -539,30 +539,36 @@ Outlines preferences of own actions based on what actions othe rplayers have tak
 </div>
 <div class="section" id="module-games.types.equilibrium">
 <span id="equilibrium-definitions"></span><h2>Equilibrium Definitions<a class="headerlink" href="#module-games.types.equilibrium" title="Permalink to this headline">¶</a></h2>
+<p>Parent classes for types of equilibrium</p>
 <dl class="class">
 <dt id="games.types.equilibrium.CoarseEq">
 <em class="property">class </em><code class="sig-prename descclassname">games.types.equilibrium.</code><code class="sig-name descname">CoarseEq</code><span class="sig-paren">(</span><em class="sig-param">play</em><span class="sig-paren">)</span><a class="headerlink" href="#games.types.equilibrium.CoarseEq" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Coarse Correlated Equilibrium.</p>
+</dd></dl>
 
 <dl class="class">
 <dt id="games.types.equilibrium.CorEq">
 <em class="property">class </em><code class="sig-prename descclassname">games.types.equilibrium.</code><code class="sig-name descname">CorEq</code><span class="sig-paren">(</span><em class="sig-param">play</em><span class="sig-paren">)</span><a class="headerlink" href="#games.types.equilibrium.CorEq" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Correlated Equilibrium.</p>
+</dd></dl>
 
 <dl class="class">
 <dt id="games.types.equilibrium.DomEq">
 <em class="property">class </em><code class="sig-prename descclassname">games.types.equilibrium.</code><code class="sig-name descname">DomEq</code><span class="sig-paren">(</span><em class="sig-param">play</em><span class="sig-paren">)</span><a class="headerlink" href="#games.types.equilibrium.DomEq" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Strictly Dominating Equilibrium</p>
+</dd></dl>
 
 <dl class="class">
 <dt id="games.types.equilibrium.MixedEq">
 <em class="property">class </em><code class="sig-prename descclassname">games.types.equilibrium.</code><code class="sig-name descname">MixedEq</code><span class="sig-paren">(</span><em class="sig-param">play</em><span class="sig-paren">)</span><a class="headerlink" href="#games.types.equilibrium.MixedEq" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Mixed Nash equilibrium.</p>
+</dd></dl>
 
 <dl class="class">
 <dt id="games.types.equilibrium.PureEq">
 <em class="property">class </em><code class="sig-prename descclassname">games.types.equilibrium.</code><code class="sig-name descname">PureEq</code><span class="sig-paren">(</span><em class="sig-param">play</em><span class="sig-paren">)</span><a class="headerlink" href="#games.types.equilibrium.PureEq" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Pure Nash Equilibrium.</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-games.types.resource">
@@ -640,7 +646,7 @@ Outlines preferences of own actions based on what actions othe rplayers have tak
 <em class="property">class </em><code class="sig-prename descclassname">games.types.misc.</code><code class="sig-name descname">MutablePlayer</code><span class="sig-paren">(</span><em class="sig-param">name: str, index: int, actions: games.types.game.Actions, util: Callable[[...], Union[float, Any]]</em><span class="sig-paren">)</span><a class="headerlink" href="#games.types.misc.MutablePlayer" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
 <dt id="games.types.misc.MutablePlayer.U">
-<code class="sig-name descname">U</code><span class="sig-paren">(</span><em class="sig-param">play: list</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span> &#x2192; Union[float, Any]<a class="headerlink" href="#games.types.misc.MutablePlayer.U" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">U</code><span class="sig-paren">(</span><em class="sig-param">actions: list</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span> &#x2192; Union[float, Any]<a class="headerlink" href="#games.types.misc.MutablePlayer.U" title="Permalink to this definition">¶</a></dt>
 <dd><p>Utility function that should follow the von Neumann - Morgenstern axioms.
 Outlines preferences of own actions based on what actions othe rplayers have taken.</p>
 <dl class="field-list simple">

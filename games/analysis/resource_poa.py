@@ -1,7 +1,15 @@
 #!/usr/bin/env python
+"""Summary
+"""
 # Author : Rohit Konda
 # Copyright (c) 2020 Rohit Konda. All rights reserved.
 # Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+"""
+Module for calculating the price of anarchy for a certain class of congestion games.
+Based on 'Utility Design for Distributed Resource Allocation - Part I: Characterizing and Optimizing the Exact Price of Anarchy'
+by D. Paccagnan, R. Chandan, J. Marden.
+"""
 
 import numpy as np
 from itertools import combinations, product
@@ -9,10 +17,25 @@ from typing import List, Tuple
 
 
 class ResourcePoA:
+
+    """Module for calculating PoA for a class of congestion games - see paper for more details.
+    
+    Attributes:
+        TOL (int): Significant figure for rounding to 0.
+    """
+    
     TOL = 8
 
     @staticmethod
     def I(N: int) -> List[Tuple[int, int, int]]:
+        """Returns all types of allocation strategies that are possible in a congestion game.
+        
+        Args:
+            N (int): Number of players in the congestion game.
+        
+        Returns:
+            List[Tuple[int, int, int]]: List of all a, x, b such that 1 <= a + x + b <= N.
+        """
         ind = []
         for i in range(1, N+1):
             all_i = [(j[0], j[1]-j[0]-1, i-j[1]+1) for j in combinations(range(i+2), 2)]
@@ -21,6 +44,14 @@ class ResourcePoA:
 
     @staticmethod
     def I_r(N: int) -> List[Tuple[int, int, int]]:
+        """Returns necessary types of allocation strategies used for dual PoA and optimal PoA calculations.
+        
+        Args:
+            N (int): Number of players in the congestion game.
+        
+        Returns:
+            List[Tuple[int, int, int]]: List of all a, x, b such that 1 <= a + x + b <= N and a, x, or b = 0, or a + x + b = N.
+        """
         ind = []
         for i in range(0, N+1):
             not_a = [(0, j, i) for j in range(N+1-i)]
@@ -33,6 +64,14 @@ class ResourcePoA:
 
     @staticmethod
     def _check_w(w: List[float]) -> None:
+        """Check if given welfare function is valid.
+        
+        Args:
+            w (List[float]): Welfare function.
+        
+        Raises:
+            ValueError: If welfare is not correct.
+        """
         if len(w) < 2:
             raise ValueError('w must be greater than length 2.')
         if w[0] != 0: 
@@ -42,6 +81,15 @@ class ResourcePoA:
 
     @classmethod
     def _check_args(cls, f: List[float], w: List[float]) -> None:
+        """Check if given welfare w and distribution function are valid.
+        
+        Args:
+            f (List[float]): Distribution function.
+            w (List[float]): Welfare function.
+        
+        Raises:
+            ValueError: If either the welfare or distriubtion function are not valid.
+        """
         cls._check_w(w)
         
         if len(f) != len(w):
@@ -53,6 +101,14 @@ class ResourcePoA:
 
     @classmethod
     def function_poa(cls, w: List[float]) -> Tuple[np.ndarray, ...]:
+        """Return LP parameters for solving for an optimal distribution functions for a given welfare function.
+        
+        Args:
+            w (List[float]): Specified welfare function.
+        
+        Returns:
+            Tuple[np.ndarray, ...]: LP parameters for optimal PoA and f.
+        """
         cls._check_w(w)
         N = len(w)-1
         I_r = cls.I_r(N)
@@ -76,6 +132,15 @@ class ResourcePoA:
 
     @classmethod
     def dual_poa(cls, f: List[float], w: List[float]) -> Tuple[np.ndarray, ...]: 
+        """Return LP parameters for solving for PoA given a specified welfare and distribution function through dual LP.
+        
+        Args:
+            f (List[float]): Distribution function.
+            w (List[float]): Welfare function.
+        
+        Returns:
+            Tuple[np.ndarray, ...]: LP parameters for PoA.
+        """
         cls._check_args(f, w)
         N = len(w)-1
         I_r = cls.I_r(N)
@@ -95,6 +160,15 @@ class ResourcePoA:
 
     @classmethod
     def primal_poa(cls, f: List[float], w: List[float]) -> Tuple[np.ndarray, ...]:     
+        """Return LP parameters for solving for PoA given a specified welfare and distribution function through primal formulation.
+        
+        Args:
+            f (List[float]): Distribution function.
+            w (List[float]): Welfare function.
+        
+        Returns:
+            Tuple[np.ndarray, ...]: LP parameters for PoA.
+        """
         cls._check_args(f, w)
         N = len(w)-1
         I = cls.I(N)
@@ -112,6 +186,15 @@ class ResourcePoA:
 
     @classmethod
     def worst_case(cls, theta: List[float], N: int) -> Tuple[List[int], List[List[tuple]]]:
+        """Gives list of player actions and values of the worst case congestion game that attains PoA.
+        
+        Args:
+            theta (List[float]): values associated with each allocation type - given by the primal program for PoA.
+            N (int): Number of players.
+        
+        Returns:
+            Tuple[List[int], List[List[tuple]]]: (actions: list of possible actions for each player, values: value of each resource in list)
+        """
         values = []
         actions = [[(), ()] for _ in range(N)]
         I = cls.I(N)

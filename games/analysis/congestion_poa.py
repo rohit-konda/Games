@@ -3,12 +3,50 @@
 # Copyright (c) 2020 Rohit Konda. All rights reserved.
 # Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
+"""
+Module for calculating price of anarchy for a general class of congestion games, where 
+U_i(a) = sum over resources ( value of resource * C_i(players that cover resource r))
+"""
+
 import numpy as np
+from itertools import product
 from typing import List, Callable, Tuple
 
 class CongestionPoA:
-    def primal_poa(cls, flist: List[Callable[[List[int]], float]], w: Callable[[List[int]], float]) -> Tuple[np.ndarray, ...]:
-        def nash_func(j: int, Na: List[int], Nb: List[int], Nx: List[int]) -> int:
+
+    """ PoA Calculation for a general class of congestion games. 
+    Results in an LP with 4^n constraints, with n being the number of players.
+    
+    Attributes:
+        TOL (int): Significant figure for rounding to 0.
+    """
+    
+    TOL = 8
+
+    @classmethod
+    def primal_poa(cls, n: int, w: Callable[[List[int]], float], flist: List[Callable[[List[int]], float]]) -> Tuple[np.ndarray, ...]:
+        """ Primal program for calculating the price of anarcy in a congestion game.
+        
+        Args:
+            n (int): Number of players in game.
+            w (Callable[[List[int]], float]): What players are covering resource -> utility for the system.
+            flist (List[Callable[[List[int]], float]]): What players are covering resource -> Utility for player i, for i in the list.
+        
+        Returns:
+            Tuple[np.ndarray, ...]: LP Parameters for getting PoA calculations.
+        """
+        def nash_func(j: int, Na: List[int], Nb: List[int], Nx: List[int]) -> float:
+            """Used to define the nash constraints for the LP Program.
+            
+            Args:
+                j (int): Which player under consideration
+                Na (List[int]): What players are covering in nash allocation.
+                Nb (List[int]): What players are covering in the optimal allocation.
+                Nx (List[int]): What players are covering in both allocations.
+            
+            Returns:
+                float: Utility gained from covering.
+            """
             if j in Na:
                 return flist[j](Na + Nx)
             elif j in Nb:
@@ -16,9 +54,8 @@ class CongestionPoA:
             else:
                 return 0
 
-        cls.check_args(w, flist)
+        cls._check_args(n, w, flist)
         
-        n = cls.n
         n_c = 4**n - 1
         partition = list(product([1, 2, 3, 4], repeat=n))[:-1]
 
@@ -43,29 +80,49 @@ class CongestionPoA:
         
         return c, G, h, A, b
 
-    def check_args(cls, w: Callable[[List[int]], float], flist: List[Callable[[List[int]], float]]) -> None:
-        pass
+    @classmethod
+    def _check_args(cls, n: int, w: Callable[[List[int]], float], flist: List[Callable[[List[int]], float]]) -> None:
+        """check given parameters to see if they are valid.
+        
+        Args:
+            n (int): Number of players in game.
+            w (Callable[[List[int]], float]): What players are covering resource -> utility for the system.
+            flist (List[Callable[[List[int]], float]]): What players are covering resource -> Utility for player i, for i in the list.
+        
+        Raises:
+            ValueError: if the length of the flist doesn't match number of players.
+        """
+        if n != len(flist):
+            raise ValueError('flist must have length matching n.')
 
-
-    def worst_case(cls, theta: List[float] , N: int) -> Tuple[List[float], List[List[tuple]]]:
-        """ get worst case instance """
+    @classmethod
+    def worst_case(cls, theta: List[float], N: int) -> Tuple[List[float], List[List[tuple]]]:
+        """Gives list of player actions and values of the worst case congestion game that attains PoA.
+        
+        Args:
+            theta (List[float]): values associated with each allocation type - given by the primal program for PoA.
+            N (int): Number of players.
+        
+        Returns:
+            Tuple[List[float], List[List[tuple]]]: (actions: list of possible actions for each player, values: value of each resource in list)
+        """
         values = []
         actions = [[(), ()] for _ in range(N)]
-        partition = list(product([1, 2, 3, 4], repeat=n))[:-1]
+        partition = list(product([1, 2, 3, 4], repeat=N))[:-1]
 
         c = 0
         for i, t in enumerate(theta):
-            val = round(t, 7) # round theta to avoid ~0 value resources
+            val = round(t, cls.TOL) # round theta to avoid ~0 value resources
             if  val > 0:
                 values.append(val)
                 for j in range(N):
                     if partition[i][j] == 1:
-                        strategies[j][0] += (c,)
+                        actions[j][0] += (c,)
                     elif partition[i][j] == 2:
-                        strategies[j][0] += (c,)
-                        strategies[j][1] += (c,)
+                        actions[j][0] += (c,)
+                        actions[j][1] += (c,)
                     elif partition[i][j] == 3:
-                        strategies[j][1] += (c,)
+                        actions[j][1] += (c,)
                 c += 1
 
-        return values, actions
+        return actions, values

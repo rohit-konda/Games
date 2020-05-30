@@ -55,6 +55,7 @@ class StrategicGame(Game):
     
     def __init__(self, players: List[StrategicPlayer]):
         Game.__init__(self, players)
+        self.payoffs = [p.payoff for p in self.players]
 
 
 class StrategicFactory(GFactory):

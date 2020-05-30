@@ -16,6 +16,7 @@ class StrategicFactory_Test(ut.TestCase):
 	def test_several_payoffs(self):
 		pay2 = [np.array([[2, 0, 1], [3, 1, 0]]), np.array([[2, 3, 1], [0, 1, 0]])]
 		game2 = StrategicFactory.make_game(pay2)
+		self.assertTrue(equalpayoffs(game2.payoffs, [np.array([[2, 0, 1], [3, 1, 0]]), np.array([[2, 3, 1], [0, 1, 0]])]))
 		self.assertTrue(equalpayoffs(get_payoff(game2), pay2))
 		self.assertTrue([ac.actions for ac in game2.actions] == [[0, 1], [0, 1, 2]])
 		pay3 = [np.array([[2, 0, 1], [3, 1, 0], [2, 3, 4]]), np.array([[2, 3, 1], [0, 1, 0], [4, 3, 2]])]

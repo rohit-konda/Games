@@ -13,10 +13,25 @@ from typing import List
 
 
 class BruteNash:
+
+    """Collection of methods for brute force calculation of Nash equilibrium in noncooperative games.
+    
+    Attributes:
+        TOLERANCE (float): Numerical tolerance for float point comparisons.
+    """
+    
     TOLERANCE = 10**-8
 
     @staticmethod
     def game_to_payoffs(game: Game) -> List[np.ndarray]:
+        """Turn a noncooperative game into strategic form through calculation of payoff arrays.
+        
+        Args:
+            game (Game): Noncooperative game, all players must have a finite number of actioms.
+        
+        Returns:
+            List[np.ndarray]: List of payoff arrays defining the game.
+        """
         num_act = [len(ac) for ac in game.actions]
         payoffs = [None]*game.N
         for i, player in enumerate(game.players):
@@ -29,6 +44,15 @@ class BruteNash:
 
     @classmethod
     def find_NCnash(cls, game: Game, add=True) -> List[PureEq]:
+        """Find nash equilibrium of a specified noncooperative game through brute force search.
+        
+        Args:
+            game (Game): Noncooperative Game with finite action sets.
+            add (bool, optional): Whether to add the calculated equilibrium to Game.eq member.
+        
+        Returns:
+            List[PureEq]: List of calculated Nash equilibrium.
+        """
         eq = find_nash(cls.game_to_payoffs(game))
         if add:
             game.eq += eq
@@ -36,6 +60,14 @@ class BruteNash:
 
     @classmethod
     def find_nash(cls, payoffs: List[np.ndarray]) -> List[PureEq]:
+        """Find nash equilibrium of specified list of payoff matrices through brute force search.
+        
+        Args:
+            payoffs (List[np.ndarray]): List of payoff arrays defining the utilities of the game.
+        
+        Returns:
+            List[PureEq]: List of calculated Nash equilibrium.
+        """
         cpnes = list(np.argwhere(payoffs[0] > np.amax(payoffs[0], 0) - cls.TOLERANCE))
         cpnes = [tuple(cpne) for cpne in cpnes]
         N = len(payoffs)

@@ -49,7 +49,7 @@ class Player:
     def __init__(self, name: str, index: int, actions: Actions):
         self.name: str = name
         self.index: int = index
-        self.actions: Actions = actions
+        self.actions = actions
 
     def U(self, actions: list, *args) -> Union[float, Any]:
         """ Utility function that should follow the von Neumann - Morgenstern axioms. 

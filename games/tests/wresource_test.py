@@ -6,7 +6,7 @@ import unittest as ut
 import numpy as np
 
 
-class ResourceFactory_Test(ut.TestCase):
+class WResourceFactory_Test(ut.TestCase):
 	def setUp(self):
 		def f_r(r, players): return len(players)
 		game1_kwargs = {'all_actions' : [[[0, 1], [1]], [[0], [1]]],

@@ -48,8 +48,8 @@ class MutablePlayer(Player):
         Player.__init__(self, name, index, actions)
         self._util: Callable[..., Union[float, Any]] = util 
 
-    def U(self, play: list, *args) -> Union[float, Any]:
-        return self._util(play, *args)
+    def U(self, actions: list, *args) -> Union[float, Any]:
+        return self._util(actions, *args)
 
 
 

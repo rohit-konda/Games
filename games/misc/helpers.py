@@ -22,7 +22,7 @@ def powerset(iterable: Iterable) -> List[tuple]:
     s = list(iterable)
     return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
 
-def verify_player_list(self, game: Game) -> None:
+def verify_player_list(game: Game) -> None:
     """Check that player list is nonempty and indexed from 0 to N.
     
     Args:

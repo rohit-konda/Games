@@ -20,8 +20,17 @@ class BruteNash_Test(ut.TestCase):
 
 
 class BrutePoA_Test(ut.TestCase):
-	pass
+	def setUp(self):
+		pass
 
+	def test_game_to_welfare(self):
+		pass
+
+	def test_set_poas(self):
+		pass
+
+	def test_welfare_game(self):
+		pass
 
 if __name__ == '__main__':
 	ut.main()

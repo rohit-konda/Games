@@ -47,15 +47,18 @@ class StrategicPlayer(Player):
 
 class StrategicGame(Game):
 
-    """ Strategic Normal Form Game.
-
+    """Strategic Normal Form Game.
+    
     Args:
         players (List[StrategicPlayer]): List of players in the game.
+    
+    Attributes:
+        payoffs (List[np.ndarray]): List of the payoff matrices for the defined game.
     """
     
     def __init__(self, players: List[StrategicPlayer]):
         Game.__init__(self, players)
-        self.payoffs = [p.payoff for p in self.players]
+        self.payoffs: List[np.ndarray] = [p.payoff for p in self.players]
 
 
 class StrategicFactory(GFactory):

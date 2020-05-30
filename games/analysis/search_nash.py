@@ -8,8 +8,7 @@ from itertools import product
 from games.types.equilibrium import PureEq
 from games.types.game import Game
 from games.types.misc import WelfareGame
-import numpy as np
-from typing import List
+from typing import List, Tuple
 
 
 class BruteNash:
@@ -83,8 +82,22 @@ class BruteNash:
 
 
 class BrutePoA:
+
+    """Collection of methods used for calculating price of anarchy/stability.
+    We use the designation PoA = min (welfare of pne / welfare of optimal) over all pne
+    and PoS = max (welfare of pne / welfare of optimal) over all pne.
+    """
+    
     @staticmethod
-    def game_to_welfare(game: WelfareGame):
+    def game_to_welfare(game: WelfareGame) -> np.ndarray:
+        """Retrieve the Welfare matrix from a Welfare Game.
+        
+        Args:
+            game (WelfareGame): Welfare Game, all players must have a finite action set.
+        
+        Returns:
+            np.ndarray: Welfare matrix.
+        """
         num_act = [len(ac) for ac in game.actions]
         welfare = np.zeros(num_act)
         # generate all possible types of action indices
@@ -93,12 +106,29 @@ class BrutePoA:
         return welfare
 
     @staticmethod
-    def set_poas(list_pureeq, welfare):
-        pne_welfare = [welfare[pne.play] for pne in list_pureeq]
+    def set_poas(list_pureeq: List[PureEq], welfare: np.ndarray) -> Tuple[float, float]:
+        """Get price of anarchy and prince of stability based on the list of pure equilibrium of the game.
+        
+        Args:
+            list_pureeq (List[PureEq]): List of pure equilibria of the given game
+            welfare (np.ndarray): Welfare matrix of the game.
+        
+        Returns:
+            Tuple[float, float]: PoA, PoS
+        """
+        pne_welfare = [welfare[tuple(pne.play)] for pne in list_pureeq]
         opt = np.max(welfare)
         price_ratios = [float(pne)/opt for pne in pne_welfare]
         return min(price_ratios), max(price_ratios)
 
     @staticmethod
-    def get_argopt(welfare): 
+    def get_argopt(welfare: np.ndarray) -> Tuple[int, ...]: 
+        """get index of where maximum is attained for a welfare matrix.
+        
+        Args:
+            welfare (np.ndarray): Welfare matrix.
+        
+        Returns:
+            Tuple[int, ...]: An index where maximum is attained (may not be unique though).
+        """
         return np.unravel_index(np.argmax(welfare), welfare.shape)

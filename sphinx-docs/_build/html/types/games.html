@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Game definitions &#8212; Games 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Types of Games" href="../analysis/index.html" />
+    <link rel="prev" title="Types of Games" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../analysis/index.html" title="Types of Games"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Types of Games"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Games 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Types of Games</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-games.types.game">
+<span id="game-definitions"></span><span id="games"></span><h1>Game definitions<a class="headerlink" href="#module-games.types.game" title="Permalink to this headline">¶</a></h1>
+<p>Top level module for creating a Game object instance.
+Also abstractly defines Player, Action, and Equilibrium objects.</p>
+<dl class="class">
+<dt id="games.types.game.Actions">
+<em class="property">class </em><code class="sig-prename descclassname">games.types.game.</code><code class="sig-name descname">Actions</code><a class="headerlink" href="#games.types.game.Actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for an action that a Player can take.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="games.types.game.Eq">
+<em class="property">class </em><code class="sig-prename descclassname">games.types.game.</code><code class="sig-name descname">Eq</code><span class="sig-paren">(</span><em class="sig-param">play: list</em><span class="sig-paren">)</span><a class="headerlink" href="#games.types.game.Eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for an equilibrium solution for the game instance.</p>
+<dl class="attribute">
+<dt id="games.types.game.Eq.play">
+<code class="sig-name descname">play</code><a class="headerlink" href="#games.types.game.Eq.play" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index of action being taken.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="games.types.game.Game">
+<em class="property">class </em><code class="sig-prename descclassname">games.types.game.</code><code class="sig-name descname">Game</code><span class="sig-paren">(</span><em class="sig-param">players: List[games.types.game.Player]</em><span class="sig-paren">)</span><a class="headerlink" href="#games.types.game.Game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bare-bones game theoretical defintion of a game instance.</p>
+<dl class="attribute">
+<dt id="games.types.game.Game.players">
+<code class="sig-name descname">players</code><a class="headerlink" href="#games.types.game.Game.players" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of players defining the game interactions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#games.types.game.Player" title="games.types.game.Player">Player</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="games.types.game.Game.actions">
+<code class="sig-name descname">actions</code><a class="headerlink" href="#games.types.game.Game.actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of Actions object for each player.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#games.types.game.Actions" title="games.types.game.Actions">Actions</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="games.types.game.Game.N">
+<code class="sig-name descname">N</code><a class="headerlink" href="#games.types.game.Game.N" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of players in the game.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="games.types.game.Game.eq">
+<code class="sig-name descname">eq</code><a class="headerlink" href="#games.types.game.Game.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of equilibrium solutions to the game.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#games.types.game.Eq" title="games.types.game.Eq">Eq</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="games.types.game.Game.U_i">
+<code class="sig-name descname">U_i</code><span class="sig-paren">(</span><em class="sig-param">i: int</em>, <em class="sig-param">play: list</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span> &#x2192; Union[float, Any]<a class="headerlink" href="#games.types.game.Game.U_i" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns utility of player i based on the play.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – For returning the utility of player i.</p></li>
+<li><p><strong>play</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Which indexes of actions are played by each player.</p></li>
+<li><p><strong>*args</strong> – Here for extendability of the class.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Utility of player i.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Union[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a>, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="games.types.game.Game.all_play">
+<code class="sig-name descname">all_play</code><span class="sig-paren">(</span><em class="sig-param">play: list</em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#games.types.game.Game.all_play" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of actions based on the indexes of play taken by each player.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>play</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Index of each action taken by each player</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of actions taken by each player.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="games.types.game.Player">
+<em class="property">class </em><code class="sig-prename descclassname">games.types.game.</code><code class="sig-name descname">Player</code><span class="sig-paren">(</span><em class="sig-param">name: str</em>, <em class="sig-param">index: int</em>, <em class="sig-param">actions: games.types.game.Actions</em><span class="sig-paren">)</span><a class="headerlink" href="#games.types.game.Player" title="Permalink to this definition">¶</a></dt>
+<dd><p>Game theoretical based description of a player in a game.</p>
+<dl class="attribute">
+<dt id="games.types.game.Player.name">
+<code class="sig-name descname">name</code><a class="headerlink" href="#games.types.game.Player.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Label for the player.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="games.types.game.Player.index">
+<code class="sig-name descname">index</code><a class="headerlink" href="#games.types.game.Player.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index for the player for easy reference in a list of players in a game.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="games.types.game.Player.actions">
+<code class="sig-name descname">actions</code><a class="headerlink" href="#games.types.game.Player.actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actions object that the player can take.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#games.types.game.Actions" title="games.types.game.Actions">Actions</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="games.types.game.Player.U">
+<code class="sig-name descname">U</code><span class="sig-paren">(</span><em class="sig-param">actions: list</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span> &#x2192; Union[float, Any]<a class="headerlink" href="#games.types.game.Player.U" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility function that should follow the von Neumann - Morgenstern axioms.
+Outlines preferences of own actions based on what actions othe rplayers have taken.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>actions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of actions that each player in the game has taken.</p></li>
+<li><p><strong>*args</strong> – Here for extendability of the class.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.8)"><strong>NotImplementedError</strong></a> – Not implemented.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Utility of player i.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Union[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a>, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Types of Games</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../analysis/index.html"
+                        title="next chapter">Types of Games</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/types/games.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../analysis/index.html" title="Types of Games"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Types of Games"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Games 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Types of Games</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Rohit Konda.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+  </body>
+</html>

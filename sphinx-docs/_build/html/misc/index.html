@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Miscellaneous &#8212; Games 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Learning in Games" href="../learning/index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../learning/index.html" title="Learning in Games"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Games 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="miscellaneous">
+<h1>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="about-this-package">
+<h2>About This Package<a class="headerlink" href="#about-this-package" title="Permalink to this headline">¶</a></h2>
+<p>This package has various miscellaneuos helper functions and modules</p>
+</div>
+<div class="section" id="module-games.misc.helpers">
+<span id="helper-functions"></span><h2>Helper Functions<a class="headerlink" href="#module-games.misc.helpers" title="Permalink to this headline">¶</a></h2>
+<p>Accumulation of general helper functions</p>
+<dl class="function">
+<dt id="games.misc.helpers.powerset">
+<code class="sig-prename descclassname">games.misc.helpers.</code><code class="sig-name descname">powerset</code><span class="sig-paren">(</span><em class="sig-param">iterable: Iterable</em><span class="sig-paren">)</span> &#x2192; List[tuple]<a class="headerlink" href="#games.misc.helpers.powerset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a power set from the given iterable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>iterable</strong> (<em>Iterable</em>) – Iterable from which to take the power set from.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of tuples containing subsets of the given Iterable.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="games.misc.helpers.verify_player_list">
+<code class="sig-prename descclassname">games.misc.helpers.</code><code class="sig-name descname">verify_player_list</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">game: games.types.game.Game</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#games.misc.helpers.verify_player_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that player list is nonempty and indexed from 0 to N.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>game</strong> (<a class="reference internal" href="../types/index.html#games.types.game.Game" title="games.types.game.Game"><em>Game</em></a>) – Game to check.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If the player list is empty or not indexed properly.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-games.misc.solver">
+<span id="optimization-wrappers"></span><h2>Optimization Wrappers<a class="headerlink" href="#module-games.misc.solver" title="Permalink to this headline">¶</a></h2>
+<p>Module for wrapping optimization solvers for use in the game package.</p>
+<dl class="class">
+<dt id="games.misc.solver.SolverWrapper">
+<em class="property">class </em><code class="sig-prename descclassname">games.misc.solver.</code><code class="sig-name descname">SolverWrapper</code><span class="sig-paren">(</span><em class="sig-param">solver: str</em>, <em class="sig-param">progress: bool</em><span class="sig-paren">)</span><a class="headerlink" href="#games.misc.solver.SolverWrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for solving Convex Programs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Which solver to use.</p></li>
+<li><p><strong>progress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether to show progress of solver.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="games.misc.solver.SolverWrapper.SUPPORTED">
+<code class="sig-name descname">SUPPORTED</code><a class="headerlink" href="#games.misc.solver.SolverWrapper.SUPPORTED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Which solvers are supported overall.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="games.misc.solver.SolverWrapper.LP_SUPPORTED">
+<code class="sig-name descname">LP_SUPPORTED</code><a class="headerlink" href="#games.misc.solver.SolverWrapper.LP_SUPPORTED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Which solvers are supported for solving an LP.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="games.misc.solver.SolverWrapper.progress">
+<code class="sig-name descname">progress</code><a class="headerlink" href="#games.misc.solver.SolverWrapper.progress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to show progress of solver.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="games.misc.solver.SolverWrapper.returnall">
+<code class="sig-name descname">returnall</code><a class="headerlink" href="#games.misc.solver.SolverWrapper.returnall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to wrap solver output in a dict or just return everything.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="games.misc.solver.SolverWrapper.solver">
+<code class="sig-name descname">solver</code><a class="headerlink" href="#games.misc.solver.SolverWrapper.solver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Which solver to use.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="games.misc.solver.SolverWrapper.check_solver">
+<code class="sig-name descname">check_solver</code><span class="sig-paren">(</span><em class="sig-param">solver: str</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#games.misc.solver.SolverWrapper.check_solver" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if solver is supported and perform some necessary setup.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Which solver to use.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ImportError" title="(in Python v3.8)"><strong>ImportError</strong></a> – If solver given is not an implemented solver.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="games.misc.solver.SolverWrapper.lp">
+<code class="sig-name descname">lp</code><span class="sig-paren">(</span><em class="sig-param">c: numpy.ndarray</em>, <em class="sig-param">G: numpy.ndarray</em>, <em class="sig-param">h: numpy.ndarray</em>, <em class="sig-param">A: numpy.ndarray</em>, <em class="sig-param">b: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Optional[Dict[str, Any]]<a class="headerlink" href="#games.misc.solver.SolverWrapper.lp" title="Permalink to this definition">¶</a></dt>
+<dd><p>solver for LP. Form is min c^T x subject to G x &lt;= h , A x = b.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>c</strong> (<em>np.ndarray</em>) – Objective function.</p></li>
+<li><p><strong>G</strong> (<em>np.ndarray</em>) – Linear inequality constraint.</p></li>
+<li><p><strong>h</strong> (<em>np.ndarray</em>) – Linear inequality constraint.</p></li>
+<li><p><strong>A</strong> (<em>np.ndarray</em>) – Linear equality constraint.</p></li>
+<li><p><strong>b</strong> (<em>np.ndarray</em>) – Linear equality constraint.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If not returnall, return {‘min’: minimum of objective, ‘argmin’: value in which the minimum is obtained.}.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Optional[Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>, Any]]</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ImportError" title="(in Python v3.8)"><strong>ImportError</strong></a> – If specified solver is not an implemented LP solver.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="games.misc.solver.lp">
+<code class="sig-prename descclassname">games.misc.solver.</code><code class="sig-name descname">lp</code><span class="sig-paren">(</span><em class="sig-param">solver: str</em>, <em class="sig-param">c: numpy.ndarray</em>, <em class="sig-param">G: numpy.ndarray</em>, <em class="sig-param">h: numpy.ndarray</em>, <em class="sig-param">A: numpy.ndarray = None</em>, <em class="sig-param">b: numpy.ndarray = None</em>, <em class="sig-param">progress: bool = False</em><span class="sig-paren">)</span> &#x2192; Dict[str, Any]<a class="headerlink" href="#games.misc.solver.lp" title="Permalink to this definition">¶</a></dt>
+<dd><p>lp solver of the standard form: min c^T x subject to G x &lt;= h , A x = b.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – which solver to use for solving the linear program.</p></li>
+<li><p><strong>c</strong> (<em>np.ndarray</em>) – Objective function.</p></li>
+<li><p><strong>G</strong> (<em>np.ndarray</em>) – Linear inequality constraint.</p></li>
+<li><p><strong>h</strong> (<em>np.ndarray</em>) – Linear inequality constraint.</p></li>
+<li><p><strong>A</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Linear equality constraint.</p></li>
+<li><p><strong>b</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Linear equality constraint.</p></li>
+<li><p><strong>progress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Toggle to show progress of optimization solver.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>{‘min’: minimum of objective, ‘argmin’: value in which the minimum is obtained.}</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="../py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="../search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Miscellaneous</a><ul>
+<li><a class="reference internal" href="#about-this-package">About This Package</a></li>
+<li><a class="reference internal" href="#module-games.misc.helpers">Helper Functions</a></li>
+<li><a class="reference internal" href="#module-games.misc.solver">Optimization Wrappers</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../learning/index.html"
+                        title="previous chapter">Learning in Games</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../learning/index.html" title="Learning in Games"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Games 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Rohit Konda.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+  </body>
+</html>

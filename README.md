@@ -7,13 +7,9 @@ python package for defining various types of games
 - Stochastic Games
 - State Based Games
 - Zero Sum Game Analysis
-- Learning Algorithms
+- Learning Algorithms : Fictitous Play + LogLinear
 
 # To Finish
-- congestion testing
-- cong extensions testing
-- board game testing
-- misc testing
-- state_game testing
-- congestion poa testing
-- add documentation
+- testing boardgame, stategame
+- check_args for congestion/shapley
+- worst case game for congestionpoa in price of anarchy

@@ -1,24 +1,20 @@
-from games.types.wresource import WResourceFactory
+from games.types.resource import ResourceFactory
 from games.make_games import get_payoff
 from games.tests.strategic_test import equalpayoffs
-from games.analysis.search_nash import BrutePoA
 import unittest as ut
 import numpy as np
 
- 
-class WResourceFactory_Test(ut.TestCase):
+
+class ResourceFactory_Test(ut.TestCase):
 	def setUp(self):
 		game1_kwargs = {'all_actions' : [[[0, 1], [1]], [[0], [1]]],
 		'values' : [2, 1],
-		'f' : [0, 1, 2],
-		'w' : [0, 1, 1]}
-		self.game1 = WResourceFactory.make_game(**game1_kwargs)
+		'f' : [0, 1, 2]}
+		self.game1 = ResourceFactory.make_game(**game1_kwargs)
 
 	def test_make_game(self):
 		g1 = self.game1
-		w1 = np.array([[3., 3.], [3., 1.]])
 		pay1 = [np.array([[5., 4.], [1., 2.]]), np.array([[4., 2.], [2., 2.]])]
-		self.assertTrue((w1 == BrutePoA.game_to_welfare(g1)).all())
 		self.assertTrue(equalpayoffs(get_payoff(g1), pay1))
 
 	def test_make_players(self):
@@ -37,22 +33,20 @@ class WResourceFactory_Test(ut.TestCase):
 		self.assertEqual(p_gm1.U([(0,), (1,)]), 2)
 		self.assertEqual(p_gm1.U([(0, 1), (1,)]), 4)
 
-	def test_welfare(self):
-		gm1 = self.game1
-		self.assertEqual(gm1.w_r(0, [0, 1]), 2)
-		self.assertEqual(gm1.w_r(1, [0]), 1)
-		self.assertEqual(gm1.welfare([0, 1]), 3)
-		self.assertEqual(gm1.welfare([1, 0]), 3)
-		self.assertEqual(gm1.welfare([1, 1]), 1)
-
 	def test_check_args(self):
-		gmargs = [[[()], [()]], [0], [0], [0, 1, 2]]
-		self.assertRaises(ValueError, WResourceFactory.make_game, *gmargs)
+		gmargs = [[[()], [()]], [0], [0]]
+		self.assertRaises(ValueError, ResourceFactory.make_game, *gmargs)
 		gmargs[2] = [0, 1]
-		self.assertRaises(ValueError, WResourceFactory.make_game, *gmargs)
+		self.assertRaises(ValueError, ResourceFactory.make_game, *gmargs)
 		gmargs[2] = [0, 1, 2]
 		gmargs[0] += [[()]]
-		self.assertRaises(ValueError, WResourceFactory.make_game, *gmargs)
+		self.assertRaises(ValueError, ResourceFactory.make_game, *gmargs)
+		gmargs[2] = [0, 1, 2, 3]
+		try:
+			ResourceFactory.make_game(*gmargs)
+		except Exception as e:
+			self.fail('make game failed with correct all_actions and f')
+
 
 if __name__ == '__main__':
 	ut.main()

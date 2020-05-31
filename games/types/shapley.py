@@ -34,7 +34,7 @@ class ShapleyCGame(CongestionGame, PotentialGame):
 
     def potential(self, play: List[int]) -> float:
         actions = self.all_play(play)
-        return sum([sum([self.f_r(i, len(c)) for c in range(cov)]) for i, cov in self.pcover(actions)])
+        return sum([sum([self.fcov(i, c) for c in range(len(cov)+1)]) for i, cov in self.pcover(actions)])
 
 
 class MutableShapleyCGame(ShapleyCGame):
@@ -61,4 +61,7 @@ class ShapleyFactory(GFactory):
 
     @classmethod
     def _check_args(cls, all_actions: List[List[List[int]]], r_m: int, fcov: Callable[[int, int], float]) -> None:
-        pass
+        try:
+            fcov(r_m, len(all_actions))
+        except Exception as e:
+            raise Exception('Tried to call fcov(r_m, len(all_actions)), either all_actions wrong length, or fcov not well defined.')

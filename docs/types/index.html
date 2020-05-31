@@ -309,6 +309,17 @@ Includes factory methods for normal form game creation.</p>
 <dd class="field-odd"><p><strong>players</strong> (<em>List</em><em>[</em><a class="reference internal" href="#games.types.strategic.StrategicPlayer" title="games.types.strategic.StrategicPlayer"><em>StrategicPlayer</em></a><em>]</em>) – List of players in the game.</p>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="games.types.strategic.StrategicGame.payoffs">
+<code class="sig-name descname">payoffs</code><a class="headerlink" href="#games.types.strategic.StrategicGame.payoffs" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of the payoff matrices for the defined game.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -362,16 +373,24 @@ Includes factory methods for normal form game creation.</p>
 <dl class="class">
 <dt id="games.types.congestion.CongestionFactory">
 <em class="property">class </em><code class="sig-prename descclassname">games.types.congestion.</code><code class="sig-name descname">CongestionFactory</code><a class="headerlink" href="#games.types.congestion.CongestionFactory" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
+<dd><p>Factory class for creating a congestion game based on given parameters.</p>
+<dl class="method">
 <dt id="games.types.congestion.CongestionFactory.make_game">
 <em class="property">classmethod </em><code class="sig-name descname">make_game</code><span class="sig-paren">(</span><em class="sig-param">all_actions: List[List[List[int]]], r_m: int, list_f_r: List[Callable[[int, List[int]], float]]</em><span class="sig-paren">)</span> &#x2192; games.types.congestion.CongestionGame<a class="headerlink" href="#games.types.congestion.CongestionFactory.make_game" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main method for game creation.</p>
+<dd><p>Main method for game creation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>*args</strong> – Arguments needed for creating a game.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>all_actions</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>]</em>) – List of possible coverings for each player.</p></li>
+<li><p><strong>r_m</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of resources in the congestion game.</p></li>
+<li><p><strong>list_f_r</strong> (<em>List</em><em>[</em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>]</em><em>]</em>) – List of covering utility functions for each player.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.8)"><strong>NotImplementedError</strong></a> – Needs to be implemented.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Created congestion game.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#games.types.congestion.CongestionGame" title="games.types.congestion.CongestionGame">CongestionGame</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -381,7 +400,44 @@ Includes factory methods for normal form game creation.</p>
 <dl class="class">
 <dt id="games.types.congestion.CongestionGame">
 <em class="property">class </em><code class="sig-prename descclassname">games.types.congestion.</code><code class="sig-name descname">CongestionGame</code><span class="sig-paren">(</span><em class="sig-param">players: List[games.types.congestion.CongestionPlayer], r_m: int</em><span class="sig-paren">)</span><a class="headerlink" href="#games.types.congestion.CongestionGame" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>General Congestion Game with player and resource dependent covering functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>players</strong> (<em>List</em><em>[</em><a class="reference internal" href="#games.types.strategic.StrategicPlayer" title="games.types.strategic.StrategicPlayer"><em>StrategicPlayer</em></a><em>]</em>) – List of players in the game.</p></li>
+<li><p><strong>r_m</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – number of resources in the congestion game.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="games.types.congestion.CongestionGame.r_m">
+<code class="sig-name descname">r_m</code><a class="headerlink" href="#games.types.congestion.CongestionGame.r_m" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of resources in the congestion game.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="games.types.congestion.CongestionGame.pcover">
+<code class="sig-name descname">pcover</code><span class="sig-paren">(</span><em class="sig-param">actions: List[List[int]]</em><span class="sig-paren">)</span> &#x2192; List[Tuple[int, List[int]]]<a class="headerlink" href="#games.types.congestion.CongestionGame.pcover" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives what players are covering which resource over a given action set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>actions</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em>) – Covering action taken by all players.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of (resource index, which players are covering resource).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[Tuple[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>, List[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
 
 <dl class="class">
 <dt id="games.types.congestion.CongestionPlayer">
@@ -403,19 +459,13 @@ Includes factory methods for normal form game creation.</p>
 Outlines preferences of own actions based on what actions othe rplayers have taken.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>actions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of actions that each player in the game has taken.</p></li>
-<li><p><strong>*args</strong> – Here for extendability of the class.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>actions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of actions that each player in the game has taken.</p>
 </dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.8)"><strong>NotImplementedError</strong></a> – Needs to be implemented.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Utility of the player.</p>
 </dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Utility of the player.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Union[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a>, Any]</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Union[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a>, Any]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -443,12 +493,40 @@ Outlines preferences of own actions based on what actions othe rplayers have tak
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="games.types.congestion.CongestionPlayer.pcover">
+<code class="sig-name descname">pcover</code><span class="sig-paren">(</span><em class="sig-param">actions: List[List[int]]</em><span class="sig-paren">)</span> &#x2192; List[Tuple[int, List[int]]]<a class="headerlink" href="#games.types.congestion.CongestionPlayer.pcover" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives which players are covering resource r covered by self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>actions</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em>) – Covering action taken by all players.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of (resource index, which players are covering resource, including self).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[Tuple[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>, List[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="games.types.congestion.MutableCGPlayer">
-<em class="property">class </em><code class="sig-prename descclassname">games.types.congestion.</code><code class="sig-name descname">MutableCGPlayer</code><span class="sig-paren">(</span><em class="sig-param">name: str, index: int, actions: games.types.misc.FActions, f_r: List[float]</em><span class="sig-paren">)</span><a class="headerlink" href="#games.types.congestion.MutableCGPlayer" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
+<em class="property">class </em><code class="sig-prename descclassname">games.types.congestion.</code><code class="sig-name descname">MutableCGPlayer</code><span class="sig-paren">(</span><em class="sig-param">name: str, index: int, actions: games.types.misc.FActions, f_r: Callable[[int, List[int]], float]</em><span class="sig-paren">)</span><a class="headerlink" href="#games.types.congestion.MutableCGPlayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Congestion Player with modifiable covering function f_r</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Label for the player.</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Index for the player for easy reference in a list of players in a game.</p></li>
+<li><p><strong>actions</strong> (<a class="reference internal" href="#games.types.game.Actions" title="games.types.game.Actions"><em>Actions</em></a>) – Actions object that the player can take.</p></li>
+<li><p><strong>f_r</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>]</em>) – Given utility covering function.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
 <dt id="games.types.congestion.MutableCGPlayer.f_r">
 <code class="sig-name descname">f_r</code><span class="sig-paren">(</span><em class="sig-param">r: int, players: List[int]</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#games.types.congestion.MutableCGPlayer.f_r" title="Permalink to this definition">¶</a></dt>
 <dd><p>Utility given if covering the resource r when others are covering the resource as well.</p>
@@ -459,14 +537,11 @@ Outlines preferences of own actions based on what actions othe rplayers have tak
 <li><p><strong>players</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) – Players including self that are covering resource r.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.8)"><strong>NotImplementedError</strong></a> – Needs to be implemented.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Utility gained from the covering that resource.</p>
 </dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Utility gained from the covering that resource.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -636,15 +711,44 @@ Outlines preferences of own actions based on what actions othe rplayers have tak
 </div>
 <div class="section" id="module-games.types.misc">
 <span id="miscellaneous"></span><h2>Miscellaneous<a class="headerlink" href="#module-games.types.misc" title="Permalink to this headline">¶</a></h2>
+<p>Miscellaneous class definitions and functions that are useful for creating games.</p>
 <dl class="class">
 <dt id="games.types.misc.FActions">
 <em class="property">class </em><code class="sig-prename descclassname">games.types.misc.</code><code class="sig-name descname">FActions</code><span class="sig-paren">(</span><em class="sig-param">actions: list</em><span class="sig-paren">)</span><a class="headerlink" href="#games.types.misc.FActions" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Wrapper for a finite action set using a list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>actions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Available actions to a player.</p>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="games.types.misc.FActions.actions">
+<code class="sig-name descname">actions</code><a class="headerlink" href="#games.types.misc.FActions.actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Available actions to a player.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
 
 <dl class="class">
 <dt id="games.types.misc.MutablePlayer">
 <em class="property">class </em><code class="sig-prename descclassname">games.types.misc.</code><code class="sig-name descname">MutablePlayer</code><span class="sig-paren">(</span><em class="sig-param">name: str, index: int, actions: games.types.game.Actions, util: Callable[[...], Union[float, Any]]</em><span class="sig-paren">)</span><a class="headerlink" href="#games.types.misc.MutablePlayer" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
+<dd><p>Player with utility function as a object parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Label for the player.</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Index for the player for easy reference in a list of players in a game.</p></li>
+<li><p><strong>actions</strong> (<a class="reference internal" href="#games.types.game.Actions" title="games.types.game.Actions"><em>Actions</em></a>) – Actions object that the player can take.</p></li>
+<li><p><strong>util</strong> (<em>Callable</em><em>[</em><em>..</em><em>, </em><em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>, </em><em>Any</em><em>]</em><em>]</em>) – Prescribed utility function for the player.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
 <dt id="games.types.misc.MutablePlayer.U">
 <code class="sig-name descname">U</code><span class="sig-paren">(</span><em class="sig-param">actions: list</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span> &#x2192; Union[float, Any]<a class="headerlink" href="#games.types.misc.MutablePlayer.U" title="Permalink to this definition">¶</a></dt>
 <dd><p>Utility function that should follow the von Neumann - Morgenstern axioms.
@@ -656,14 +760,11 @@ Outlines preferences of own actions based on what actions othe rplayers have tak
 <li><p><strong>*args</strong> – Here for extendability of the class.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.8)"><strong>NotImplementedError</strong></a> – Needs to be implemented.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Utility of the player.</p>
 </dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Utility of the player.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Union[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a>, Any]</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Union[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a>, Any]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -673,12 +774,71 @@ Outlines preferences of own actions based on what actions othe rplayers have tak
 <dl class="class">
 <dt id="games.types.misc.PotentialGame">
 <em class="property">class </em><code class="sig-prename descclassname">games.types.misc.</code><code class="sig-name descname">PotentialGame</code><span class="sig-paren">(</span><em class="sig-param">players: List[games.types.game.Player]</em><span class="sig-paren">)</span><a class="headerlink" href="#games.types.misc.PotentialGame" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Potential Game endowed with a potential function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>players</strong> (<em>List</em><em>[</em><a class="reference internal" href="#games.types.game.Player" title="games.types.game.Player"><em>Player</em></a><em>]</em>) – List of players defining the game interactions.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="games.types.misc.PotentialGame.potential">
+<code class="sig-name descname">potential</code><span class="sig-paren">(</span><em class="sig-param">play: list</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#games.types.misc.PotentialGame.potential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Potential function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>play</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Which indexes of actions are played by each player.</p></li>
+<li><p><strong>*args</strong> – Here for extendability of the class.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Potential of the game.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.8)"><strong>NotImplementedError</strong></a> – Needs to be implemented.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
 
 <dl class="class">
 <dt id="games.types.misc.WelfareGame">
 <em class="property">class </em><code class="sig-prename descclassname">games.types.misc.</code><code class="sig-name descname">WelfareGame</code><span class="sig-paren">(</span><em class="sig-param">players: List[games.types.game.Player]</em><span class="sig-paren">)</span><a class="headerlink" href="#games.types.misc.WelfareGame" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Game endowed with a system welfare function.
+Convention is larger welfare is better.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>players</strong> (<em>List</em><em>[</em><a class="reference internal" href="#games.types.game.Player" title="games.types.game.Player"><em>Player</em></a><em>]</em>) – List of players defining the game interactions.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="games.types.misc.WelfareGame.welfare">
+<code class="sig-name descname">welfare</code><span class="sig-paren">(</span><em class="sig-param">play: list</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span> &#x2192; Union[float, Any]<a class="headerlink" href="#games.types.misc.WelfareGame.welfare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Welfare function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>play</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Which indexes of actions are played by each player.</p></li>
+<li><p><strong>*args</strong> – Here for extendability of the class.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Welfare of the system.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Union[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a>, Any]</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.8)"><strong>NotImplementedError</strong></a> – Needs to be implemented.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
 
 </div>
 <div class="section" id="indices-and-tables">

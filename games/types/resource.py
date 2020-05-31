@@ -22,7 +22,7 @@ class ResourceGame(ShapleyCGame):
         self.values = values
         self.f = f
 
-    def f_r(self, r: int, ncover: int) -> float:
+    def fcov(self, r: int, ncover: int) -> float:
         raise self.values[r] * self.f[ncover]
 
 

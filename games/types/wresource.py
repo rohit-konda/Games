@@ -11,7 +11,7 @@ from games.types.factory import GFactory
 from typing import List, Tuple
 
 
-class WelfareCongGame(CongestionGame, WelfareGame):
+class WCongestionGame(CongestionGame, WelfareGame):
     def __init__(self, players: CongestionPlayer, r_m: int):
         CongestionGame.__init__(self, players, r_m)
         WelfareGame.__init__(self, players)
@@ -25,10 +25,10 @@ class WelfareCongGame(CongestionGame, WelfareGame):
         return sum(map(self.w_r, *pcover))
 
 
-class WResourceGame(ResourceGame, WelfareCongGame):
+class WResourceGame(ResourceGame, WCongestionGame):
     def __init__(self, players: List[ResourcePlayer], values: List[float], w: List[float], f: List[float]):
         ResourceGame.__init__(self, players, values, f)
-        WelfareCongGame.__init__(self, players, len(values))
+        WCongestionGame.__init__(self, players, len(values))
         self.w: List[float]= w
 
     def w_r(self, r: int, players: List[int]) -> float:

@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# Author : Rohit Konda
+# Copyright (c) 2020 Rohit Konda. All rights reserved.
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+"""
+Class definitions for a distributed resource allocation game.
+Utility is defined as sum over resources covered (value of resource * f(number of players covering))
+"""
 from games.types.congestion import CongestionPlayer
 from games.types.shapley import ShapleyCGame
 from games.types.factory import GFactory

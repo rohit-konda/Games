@@ -5,8 +5,7 @@
 
 from games.analysis.congestion_poa import CongestionPoA
 from games.analysis.resource_poa import ResourcePoA
-from games.types.wresource import WResourceFactory
-from games.types.congestion import CongestionFactory
+from games.make_games import congestion_game, welfare_resource_game
 from games.analysis.search_nash import BrutePoA, BruteNash
 from games.misc.solver import lp
 
@@ -45,7 +44,7 @@ def worst_game(f, w, solver):
 	theta = lp(solver, ResourcePoA.primal_poa(f, w))['argmin']
 	N = len(f)
 	actions, values = ResourcePoA.worst_case(theta, N)
-	return ResourceFactory.make_game(actions, values, w, f)
+	return welfare_resource_game(actions, values, w, f)
 
 
 def cong_poa(n, w, flist, solver):

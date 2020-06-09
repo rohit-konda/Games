@@ -6,7 +6,6 @@
 """
 Module for creating a Congestion Game with relevant player definitions.
 """
-import numpy as np
 from games.types.game import Game, Player
 from games.types.misc import FActions
 from games.types.factory import GFactory
@@ -15,24 +14,24 @@ from typing import List, Tuple, Callable
 
 class CongestionPlayer(Player):
 
-    """A player in a congestion game. 
-    
+    """A player in a congestion game.
+
     Args:
         name (str): Label for the player.
         index (int): Index for the player for easy reference in a list of players in a game.
         actions (FActions): Actions object that the player can take. Action is subset of power set of {1, ..., number of resources}.
     """
-    
+
     def __init__(self, name: str, index: int, actions: FActions):
         Player.__init__(self, name, index, actions)
 
     def f_r(self, r: int, players: List[int]) -> float:
         """Utility given if covering the resource r when others are covering the resource as well.
-        
+
         Args:
             r (int): Which resource under consideration.
             players (List[int]): Players including self that are covering resource r.
-        
+
         Raises:
             NotImplementedError: Needs to be implemented.
 
@@ -43,19 +42,19 @@ class CongestionPlayer(Player):
 
     def pcover(self, actions: List[List[int]]) -> List[Tuple[int, List[int]]]:
         """Gives which players are covering resource r covered by self.
-        
+
         Args:
             actions (List[List[int]]): Covering action taken by all players.
-        
+
         Returns:
             List[Tuple[int, List[int]]]: List of (resource index, which players are covering resource, including self).
         """
         return [(r, [i for i, ac in enumerate(actions) if r in ac]) for r in actions[self.index]]
 
     def U(self, actions: List[List[int]]) -> float:
-        """ Utility function that should follow the von Neumann - Morgenstern axioms. 
+        """ Utility function that should follow the von Neumann - Morgenstern axioms.
         Outlines preferences of own actions based on what actions othe rplayers have taken.
-        
+
         Args:
             actions (list): List of actions that each player in the game has taken.
 
@@ -83,25 +82,25 @@ class MutableCGPlayer(CongestionPlayer):
 
     def f_r(self, r: int, players: List[int]) -> float:
         """Utility given if covering the resource r when others are covering the resource as well.
-        
+
         Args:
             r (int): Which resource under consideration.
             players (List[int]): Players including self that are covering resource r.
-        
+
         Returns:
             float: Utility gained from the covering that resource.
         """
         return self._f_r(r, players)
 
 
-class CongestionGame(Game):    
+class CongestionGame(Game):
 
     """ General Congestion Game with player and resource dependent covering functions.
 
     Args:
         players (List[StrategicPlayer]): List of players in the game.
         r_m (int): number of resources in the congestion game.
-    
+
     Attributes:
         r_m (int): number of resources in the congestion game.
     """
@@ -112,10 +111,10 @@ class CongestionGame(Game):
 
     def pcover(self, actions: List[List[int]]) -> List[Tuple[int, List[int]]]:
         """Gives what players are covering which resource over a given action set.
-        
+
         Args:
             actions (List[List[int]]): Covering action taken by all players.
-        
+
         Returns:
             List[Tuple[int, List[int]]]: List of (resource index, which players are covering resource).
         """
@@ -126,16 +125,16 @@ class CongestionFactory(GFactory):
 
     """Factory class for creating a congestion game based on given parameters.
     """
-    
+
     @classmethod
     def make_game(cls, all_actions: List[List[List[int]]], r_m: int, list_f_r: List[Callable[[int, List[int]], float]]) -> CongestionGame:
         """Main method for game creation
-        
+
         Args:
             all_actions (List[List[List[int]]]): List of possible coverings for each player.
             r_m (int): Number of resources in the congestion game.
             list_f_r (List[Callable[[int, List[int]], float]]): List of covering utility functions for each player.
-        
+
         Returns:
             CongestionGame: Created congestion game.
         """

@@ -14,14 +14,14 @@ class Actions:
 
     """ Wrapper for an action that a Player can take.
     """
-    
+
     def __call__(self, play: Any, *args) -> Any:
         """ Returns action description based on the index of the action.
-        
+
         Args:
             play (Any): Index of action being taken.
             *args: Here for extendability of the class.
-        
+
         Raises:
             NotImplementedError: Needs to be implemented.
 
@@ -45,14 +45,14 @@ class Player:
         index (int): Index for the player for easy reference in a list of players in a game.
         actions (Actions): Actions object that the player can take.
     """
-    
+
     def __init__(self, name: str, index: int, actions: Actions):
         self.name: str = name
         self.index: int = index
         self.actions = actions
 
     def U(self, actions: list, *args) -> Union[float, Any]:
-        """ Utility function that should follow the von Neumann - Morgenstern axioms. 
+        """ Utility function that should follow the von Neumann - Morgenstern axioms.
         Outlines preferences of own actions based on what actions othe rplayers have taken.
         
         Args:
@@ -69,7 +69,7 @@ class Player:
 
     def __str__(self) -> str:
         """ String description.
-        
+
         Returns:
             str: "Player(index : name)".
         """
@@ -77,7 +77,7 @@ class Player:
 
     def __repr__(self) -> str:
         """ String representation.
-        
+
         Returns:
             str: "Player(index, name, actions)".
         """
@@ -94,13 +94,13 @@ class Eq:
     Attributes:
         play (list): Index of action being taken.
     """
-    
+
     def __init__(self, play: list):
         self.play: list = play
 
     def __repr__(self) -> str:
         """ String representation.
-        
+
         Returns:
             str: "Eq(play)".
         """

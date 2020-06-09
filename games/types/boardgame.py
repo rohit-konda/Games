@@ -5,10 +5,10 @@
 
 from games.types.game import Game, Player
 from games.types.factory import GFactory
-from abc import ABC, abstractmethod
 
-class BGFactory(GFactory, ABC):
-    @abstractmethod
+
+class BGFactory(GFactory):
+    @classmethod
     def _make_board(cls, *args):
         pass
 
@@ -19,8 +19,8 @@ class BoardGame(Game):
         self.board = board
 
     def move(self, play, *args):
-        [p.move(play, self.board) for p in self.players]
-        self.board.move(play)
+        [p.move(self.all_play(play), self.board.state) for p in self.players]
+        self.board.move(all_play)
 
     def U_i(self, i, play, *args):
         all_play = [p.actions(play[p.index], self.board) for p in self.players]
@@ -31,10 +31,10 @@ class BoardPlayer(Player):
     def __init__(self, name, index, actions):
         Player.__init__(self, name, index, actions)
 
-    def move(self, play, board, *args):
+    def move(self, actions, boardstate=None, *args):
         raise NotImplementedError
 
-    def U(self, play, board, *args):
+    def U(self, actions, boardstate=None, *args):
         raise NotImplementedError
 
 
@@ -42,7 +42,7 @@ class Board:
     def __init__(self, state):
         self.state = state
 
-    def move(self, play, *args):
+    def move(self, actions, *args):
         pass
 
     def __str__(self):
@@ -56,5 +56,5 @@ class RepeatBoard(Board):
     def __init__(self):
         Board.__init__(self, 0)
 
-    def move(self, play):
+    def move(self, actions):
         self.state += 1

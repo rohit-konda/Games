@@ -30,28 +30,28 @@ def brute_poa(game):
 
 
 def res_poa(f, w, solver):
-	return 1./lp(solver, ResourcePoA.dual_poa(f, w))['min']
+	return 1./lp(solver, *ResourcePoA.dual_poa(f, w))['min']
 
 
 def res_opt_f(w, solver):
-	sol = lp(solver, ResourcePoA.function_poa(w))
+	sol = lp(solver, *ResourcePoA.function_poa(w))
 	f = [0.] + sol['argmin'][1:]
 	poa = 1./sol['min']
 	return poa, f
 
 
 def worst_game(f, w, solver):
-	theta = lp(solver, ResourcePoA.primal_poa(f, w))['argmin']
+	theta = lp(solver, *ResourcePoA.primal_poa(f, w))['argmin']
 	N = len(f)
 	actions, values = ResourcePoA.worst_case(theta, N)
 	return welfare_resource_game(actions, values, w, f)
 
 
 def cong_poa(n, w, flist, solver):
-	return -1./lp(solver, CongestionPoA.primal_poa(n, w, flist))['min']
+	return -1./lp(solver, *CongestionPoA.primal_poa(n, w, flist))['min']
 
 
 def cong_worst_game(n, w, flist, solver):
-	theta = lp(solver, CongestionPoA.primal_poa(n, w, flist))['argmin']
+	theta = lp(solver, *CongestionPoA.primal_poa(n, w, flist))['argmin']
 	actions, values = CongestionPoA.worst_case(theta, n)
 	#### TODO ###
